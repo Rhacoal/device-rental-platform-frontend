@@ -318,11 +318,11 @@ function createApplicationFunctions<T extends IApplication>(urlBase: Application
         "reject": async (applyId: number) =>
             await doAuthenticatedRequest("POST", urlBase.rejectApplication(applyId), null, json => null),
         "self": async () =>
-            await doAuthenticatedRequest("POST", urlBase.baseUrl, null, json => json.applications as T[]),
+            await doAuthenticatedRequest("GET", urlBase.baseUrl, null, json => json.applications as T[]),
         "provider": async () =>
-            await doAuthenticatedRequest("POST", urlBase.listApplication, null, json => json.applications as T[]),
+            await doAuthenticatedRequest("GET", urlBase.listApplication, null, json => json.applications as T[]),
         "admin": async () =>
-            await doAuthenticatedRequest("POST", urlBase.adminApplication, null, json => json.applications as T[]),
+            await doAuthenticatedRequest("GET", urlBase.adminApplication, null, json => json.applications as T[]),
     }
 }
 
