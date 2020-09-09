@@ -119,7 +119,7 @@ export interface NavigatorProps extends Omit<DrawerProps, 'classes'>, WithStyles
 }
 
 function Navigator(props: NavigatorProps) {
-    const {classes, ...other} = props;
+    const {classes, isLoggedIn, currentPath, userGroup, ...other} = props;
 
     return (
         <Drawer variant="permanent" {...other}>
@@ -139,9 +139,9 @@ function Navigator(props: NavigatorProps) {
                 {/*    Project Overview*/}
                 {/*  </ListItemText>*/}
                 {/*</ListItem>*/}
-                {(props.isLoggedIn ? categories.filter((value) => {
-                    if (props.userGroup) {
-                        return value.permission.indexOf(props.userGroup) !== -1;
+                {(isLoggedIn ? categories.filter((value) => {
+                    if (userGroup) {
+                        return value.permission.indexOf(userGroup) !== -1;
                     } else {
                         return true;
                     }
@@ -160,7 +160,7 @@ function Navigator(props: NavigatorProps) {
                             <ListItem
                                 key={childId}
                                 button
-                                className={clsx(classes.item, (link.startsWith(props.currentPath)) && classes.itemActiveItem)}
+                                className={clsx(classes.item, (link.startsWith(currentPath)) && classes.itemActiveItem)}
                                 component={Link}
                                 to={link}
                             >

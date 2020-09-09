@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => createStyles({
     }
 }));
 
-export function PendingLogin(props: RouteComponentProps & {errorMessage: string}) {
+export function PendingLogin(props: {errorMessage: string}) {
     const classes = useStyles(useTheme());
     return <Container>
         <Typography variant="h4" component="h1" className={classes.title}>

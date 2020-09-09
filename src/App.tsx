@@ -171,6 +171,7 @@ function UserInfoComponent(props: RouteComponentProps) {
     const user = useSelector((store: IStore) => store.user);
     const dispatch = useDispatch();
     const [errorMessage, setErrorMessage] = React.useState("");
+
     React.useEffect(() => {
         if (!user.loggedIn) {
             props.history.push("/login");
@@ -215,7 +216,8 @@ function UserInfoComponent(props: RouteComponentProps) {
         <Route exact path={LocalUrls.main_page} component={PendingLogin}/>
         <Route path={LocalUrls.login} component={SignIn}/>
         <Route path={LocalUrls.register} component={SignUp}/>
-        <Route render={(props) => <PendingLogin {...props} errorMessage={errorMessage}/>} />
+        {/*<Route render={(props) => } />*/}
+        <PendingLogin errorMessage={errorMessage}/>
         {/*<Redirect to={LocalUrls.login}/>*/}
     </Switch>
 }

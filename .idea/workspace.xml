@@ -20,38 +20,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f1db1528-7b33-479a-8a74-0dc9de405d17" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/copyrights.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/user_avatar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/constants/application_status.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/constants/constants.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/constants/group.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/constants/local_urls.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/constants/strings.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/application_admin.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/device_borrow_application_management.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/device_create_application_management.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/device_detail_subpage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/device_list.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/device_list_provider.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/permission_application_management.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/profile.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/signin.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/signup.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/user_list.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/store.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/time_format.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/wrapper/error_code.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/wrapper/requests.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/wrapper/types.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/wrapper/urls.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/paperbase/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/paperbase/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/device_create_application_management.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/device_create_application_management.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/profile.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/paperbase/Navigator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/paperbase/Navigator.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/paperbase/Paperbase.tsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,7 +77,9 @@
       <updated>1599482901187</updated>
       <workItem from="1599482902794" duration="388000" />
       <workItem from="1599483299433" duration="51439000" />
-      <workItem from="1599567710679" duration="38995000" />
+      <workItem from="1599567710679" duration="39714000" />
+      <workItem from="1599654705520" duration="2068000" />
+      <workItem from="1599656877625" duration="614000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit. Added Paperbase template.">
       <created>1599486733964</created>
@@ -113,7 +88,21 @@
       <option name="project" value="LOCAL" />
       <updated>1599486733964</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="初步的 UI">
+      <created>1599650555279</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1599650555279</updated>
+    </task>
+    <task id="LOCAL-00003" summary="修改了不正确的方法">
+      <created>1599655735830</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1599655735830</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,7 +122,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit. Added Paperbase template." />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial commit. Added Paperbase template." />
+    <MESSAGE value="初步的 UI" />
+    <MESSAGE value="修改了不正确的方法" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改了不正确的方法" />
   </component>
   <component name="WindowStateProjectService">
     <state x="479" y="211" width="1089" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1599486562899">
@@ -148,22 +139,22 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="755" y="303" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.2048.1112@0.0.2048.1112" timestamp="1599534830793" />
-    <state width="2027" height="305" key="GridCell.Tab.0.bottom" timestamp="1599649428608">
+    <state width="2027" height="305" key="GridCell.Tab.0.bottom" timestamp="1599656173635">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="305" key="GridCell.Tab.0.bottom/0.0.2048.1112@0.0.2048.1112" timestamp="1599649428608" />
-    <state width="2027" height="305" key="GridCell.Tab.0.center" timestamp="1599649428608">
+    <state width="2027" height="305" key="GridCell.Tab.0.bottom/0.0.2048.1112@0.0.2048.1112" timestamp="1599656173635" />
+    <state width="2027" height="305" key="GridCell.Tab.0.center" timestamp="1599656173635">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="305" key="GridCell.Tab.0.center/0.0.2048.1112@0.0.2048.1112" timestamp="1599649428608" />
-    <state width="2027" height="305" key="GridCell.Tab.0.left" timestamp="1599649428608">
+    <state width="2027" height="305" key="GridCell.Tab.0.center/0.0.2048.1112@0.0.2048.1112" timestamp="1599656173635" />
+    <state width="2027" height="305" key="GridCell.Tab.0.left" timestamp="1599656173635">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="305" key="GridCell.Tab.0.left/0.0.2048.1112@0.0.2048.1112" timestamp="1599649428608" />
-    <state width="2027" height="305" key="GridCell.Tab.0.right" timestamp="1599649428608">
+    <state width="2027" height="305" key="GridCell.Tab.0.left/0.0.2048.1112@0.0.2048.1112" timestamp="1599656173635" />
+    <state width="2027" height="305" key="GridCell.Tab.0.right" timestamp="1599656173635">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="305" key="GridCell.Tab.0.right/0.0.2048.1112@0.0.2048.1112" timestamp="1599649428608" />
+    <state width="2027" height="305" key="GridCell.Tab.0.right/0.0.2048.1112@0.0.2048.1112" timestamp="1599656173635" />
     <state x="617" y="289" key="Vcs.Push.Dialog.v2" timestamp="1599486747708">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
@@ -176,17 +167,17 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="829" y="469" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.2048.1112@0.0.2048.1112" timestamp="1599483310812" />
-    <state x="724" y="154" width="600" height="804" key="find.popup" timestamp="1599637826420">
+    <state x="724" y="154" width="600" height="804" key="find.popup" timestamp="1599656051856">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="724" y="154" width="600" height="804" key="find.popup/0.0.2048.1112@0.0.2048.1112" timestamp="1599637826420" />
+    <state x="724" y="154" width="600" height="804" key="find.popup/0.0.2048.1112@0.0.2048.1112" timestamp="1599656051856" />
     <state x="681" y="259" key="run.anything.popup" timestamp="1599632617915">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="681" y="259" key="run.anything.popup/0.0.2048.1112@0.0.2048.1112" timestamp="1599632617915" />
-    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup" timestamp="1599648259004">
+    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup" timestamp="1599656618522">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup/0.0.2048.1112@0.0.2048.1112" timestamp="1599648259004" />
+    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup/0.0.2048.1112@0.0.2048.1112" timestamp="1599656618522" />
   </component>
 </project>
