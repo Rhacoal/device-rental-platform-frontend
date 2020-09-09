@@ -1,8 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import {createStyles, Theme, withStyles, WithStyles} from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
-import Drawer, { DrawerProps } from '@material-ui/core/Drawer';
+import Drawer, {DrawerProps} from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -17,128 +17,169 @@ import SettingsInputComponentIcon from '@material-ui/icons/SettingsInputComponen
 import TimerIcon from '@material-ui/icons/Timer';
 import SettingsIcon from '@material-ui/icons/Settings';
 import PhonelinkSetupIcon from '@material-ui/icons/PhonelinkSetup';
-import { Omit } from '@material-ui/types';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import {Omit} from '@material-ui/types';
+import {Strings} from "../constants/strings";
+import {LocalUrls} from "../constants/local_urls";
+import {Link} from "react-router-dom";
+import {UserGroup} from "../constants/group";
+
+const unloggedInCategories = [
+    {
+        id: '用户',
+        permission: ['borrower', 'admin', 'provider'],
+        children: [
+            {id: '登录', icon: <PeopleIcon/>, link: LocalUrls.login},
+            {id: '注册', icon: <AddBoxIcon/>, link: LocalUrls.register},
+            {id: '注册 (Legacy)', icon: <AddBoxIcon/>, link: LocalUrls.register + "?legacy"},
+        ],
+    },
+]
 
 const categories = [
-  {
-    id: 'Develop',
-    children: [
-      { id: 'Authentication', icon: <PeopleIcon />, active: true },
-      { id: 'Database', icon: <DnsRoundedIcon /> },
-      { id: 'Storage', icon: <PermMediaOutlinedIcon /> },
-      { id: 'Hosting', icon: <PublicIcon /> },
-      { id: 'Functions', icon: <SettingsEthernetIcon /> },
-      { id: 'ML Kit', icon: <SettingsInputComponentIcon /> },
-    ],
-  },
-  {
-    id: 'Quality',
-    children: [
-      { id: 'Analytics', icon: <SettingsIcon /> },
-      { id: 'Performance', icon: <TimerIcon /> },
-      { id: 'Test Lab', icon: <PhonelinkSetupIcon /> },
-    ],
-  },
+    {
+        id: '管理',
+        permission: ['admin'],
+        children: [
+            {id: '用户管理', icon: <PeopleIcon/>, link: LocalUrls.user_admin},
+            {id: '设备管理', icon: <DnsRoundedIcon/>, link: LocalUrls.device_admin},
+            {id: '提权申请处理', icon: <DoneAllIcon/>, link: LocalUrls.become_provider_admin},
+            {id: '借用申请处理', icon: <DoneAllIcon/>, link: LocalUrls.borrow_handle_admin},
+            {id: '上架申请处理', icon: <DoneAllIcon/>, link: LocalUrls.create_device_handle_admin},
+        ],
+    },
+    {
+        id: '设备借用',
+        permission: ['borrower', 'admin', 'provider'],
+        children: [
+            {id: '所有设备', icon: <DnsRoundedIcon/>, link: LocalUrls.devices},
+            {id: '我借用的', icon: <SettingsIcon/>, link: LocalUrls.borrowed_devices},
+            {id: '我的设备申请', icon: <DnsRoundedIcon/>, link: LocalUrls.apply_borrow},
+            {id: '申请成为设备提供者', icon: <DnsRoundedIcon/>, link: LocalUrls.become_provider},
+        ],
+    },
+    {
+        id: '设备管理员',
+        permission: ['admin', 'provider'],
+        children: [
+            {id: '我提供的设备', icon: <DnsRoundedIcon/>, link: LocalUrls.devices_provider},
+            {id: '借用申请处理', icon: <DoneAllIcon/>, link: LocalUrls.borrow_handle_provider},
+            {id: '上架设备', icon: <AddBoxIcon/>, link: LocalUrls.create_device_provider},
+        ],
+    },
 ];
 
 const styles = (theme: Theme) =>
-  createStyles({
-    categoryHeader: {
-      paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(2),
-    },
-    categoryHeaderPrimary: {
-      color: theme.palette.common.white,
-    },
-    item: {
-      paddingTop: 1,
-      paddingBottom: 1,
-      color: 'rgba(255, 255, 255, 0.7)',
-      '&:hover,&:focus': {
-        backgroundColor: 'rgba(255, 255, 255, 0.08)',
-      },
-    },
-    itemCategory: {
-      backgroundColor: '#232f3e',
-      boxShadow: '0 -1px 0 #404854 inset',
-      paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(2),
-    },
-    firebase: {
-      fontSize: 24,
-      color: theme.palette.common.white,
-    },
-    itemActiveItem: {
-      color: '#4fc3f7',
-    },
-    itemPrimary: {
-      fontSize: 'inherit',
-    },
-    itemIcon: {
-      minWidth: 'auto',
-      marginRight: theme.spacing(2),
-    },
-    divider: {
-      marginTop: theme.spacing(2),
-    },
-  });
+    createStyles({
+        categoryHeader: {
+            paddingTop: theme.spacing(2),
+            paddingBottom: theme.spacing(2),
+        },
+        categoryHeaderPrimary: {
+            color: theme.palette.common.white,
+        },
+        item: {
+            paddingTop: 1,
+            paddingBottom: 1,
+            color: 'rgba(255, 255, 255, 0.7)',
+            '&:hover,&:focus': {
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            },
+        },
+        itemCategory: {
+            backgroundColor: '#232f3e',
+            boxShadow: '0 -1px 0 #404854 inset',
+            paddingTop: theme.spacing(2),
+            paddingBottom: theme.spacing(2),
+        },
+        firebase: {
+            fontSize: 24,
+            color: theme.palette.common.white,
+        },
+        itemActiveItem: {
+            color: '#4fc3f7',
+        },
+        itemPrimary: {
+            fontSize: 'inherit',
+        },
+        itemIcon: {
+            minWidth: 'auto',
+            marginRight: theme.spacing(2),
+        },
+        divider: {
+            marginTop: theme.spacing(2),
+        },
+    });
 
-export interface NavigatorProps extends Omit<DrawerProps, 'classes'>, WithStyles<typeof styles> {}
+export interface NavigatorProps extends Omit<DrawerProps, 'classes'>, WithStyles<typeof styles> {
+    isLoggedIn: boolean,
+    currentPath: string,
+    userGroup?: UserGroup,
+}
 
 function Navigator(props: NavigatorProps) {
-  const { classes, ...other } = props;
+    const {classes, ...other} = props;
 
-  return (
-    <Drawer variant="permanent" {...other}>
-      <List disablePadding>
-        <ListItem className={clsx(classes.firebase, classes.item, classes.itemCategory)}>
-          Paperbase
-        </ListItem>
-        <ListItem className={clsx(classes.item, classes.itemCategory)}>
-          <ListItemIcon className={classes.itemIcon}>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText
-            classes={{
-              primary: classes.itemPrimary,
-            }}
-          >
-            Project Overview
-          </ListItemText>
-        </ListItem>
-        {categories.map(({ id, children }) => (
-          <React.Fragment key={id}>
-            <ListItem className={classes.categoryHeader}>
-              <ListItemText
-                classes={{
-                  primary: classes.categoryHeaderPrimary,
-                }}
-              >
-                {id}
-              </ListItemText>
-            </ListItem>
-            {children.map(({ id: childId, icon, active }) => (
-              <ListItem
-                key={childId}
-                button
-                className={clsx(classes.item, active && classes.itemActiveItem)}
-              >
-                <ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon>
-                <ListItemText
-                  classes={{
-                    primary: classes.itemPrimary,
-                  }}
-                >
-                  {childId}
-                </ListItemText>
-              </ListItem>
-            ))}
-            <Divider className={classes.divider} />
-          </React.Fragment>
-        ))}
-      </List>
-    </Drawer>
-  );
+    return (
+        <Drawer variant="permanent" {...other}>
+            <List disablePadding>
+                <ListItem className={clsx(classes.firebase, classes.item, classes.itemCategory)}>
+                    {Strings.app_name}
+                </ListItem>
+                {/*<ListItem className={clsx(classes.item, classes.itemCategory)}>*/}
+                {/*  <ListItemIcon className={classes.itemIcon}>*/}
+                {/*    <HomeIcon />*/}
+                {/*  </ListItemIcon>*/}
+                {/*  <ListItemText*/}
+                {/*    classes={{*/}
+                {/*      primary: classes.itemPrimary,*/}
+                {/*    }}*/}
+                {/*  >*/}
+                {/*    Project Overview*/}
+                {/*  </ListItemText>*/}
+                {/*</ListItem>*/}
+                {(props.isLoggedIn ? categories.filter((value) => {
+                    if (props.userGroup) {
+                        return value.permission.indexOf(props.userGroup) !== -1;
+                    } else {
+                        return true;
+                    }
+                }) : unloggedInCategories).map(({id, children}) => (
+                    <React.Fragment key={id}>
+                        <ListItem className={classes.categoryHeader}>
+                            <ListItemText
+                                classes={{
+                                    primary: classes.categoryHeaderPrimary,
+                                }}
+                            >
+                                {id}
+                            </ListItemText>
+                        </ListItem>
+                        {children.map(({id: childId, icon, link}) => (
+                            <ListItem
+                                key={childId}
+                                button
+                                className={clsx(classes.item, (link.startsWith(props.currentPath)) && classes.itemActiveItem)}
+                                component={Link}
+                                to={link}
+                            >
+                                <ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon>
+                                <ListItemText
+                                    classes={{
+                                        primary: classes.itemPrimary,
+                                    }}
+                                >
+                                    {childId}
+                                </ListItemText>
+                            </ListItem>
+                        ))}
+                        <Divider className={classes.divider}/>
+                    </React.Fragment>
+                ))}
+            </List>
+        </Drawer>
+    );
 }
 
 export default withStyles(styles)(Navigator);

@@ -20,35 +20,46 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f1db1528-7b33-479a-8a74-0dc9de405d17" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/device-rental-platform-frontend.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/logo192.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/logo512.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/manifest.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/robots.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/App.test.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/logo.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/serviceWorker.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/setupTests.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/copyrights.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/user_avatar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/constants/application_status.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/constants/constants.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/constants/group.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/constants/local_urls.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/constants/strings.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/application_admin.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/device_borrow_application_management.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/device_create_application_management.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/device_detail_subpage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/device_list.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/device_list_provider.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/permission_application_management.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/profile.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/signin.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/signup.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/user_list.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/store.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/time_format.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/wrapper/error_code.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/wrapper/requests.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/wrapper/types.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/wrapper/urls.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/paperbase/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/paperbase/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/paperbase/Navigator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/paperbase/Navigator.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/paperbase/Paperbase.tsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExportToHTMLSettings">
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../device-rental-platform-frontend\exportToHTML" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -61,9 +72,15 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last.edited.regexp" value="1" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="ts.external.directory.path" value="C:\Users\Rhacoal\WebstormProjects\device-rental-platform-frontend\node_modules\typescript\lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Rhacoal\WebstormProjects\device-rental-platform-frontend\src\constants" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="start" type="js.build_tools.npm" nameIsGenerated="true">
@@ -86,8 +103,17 @@
       <option name="presentableId" value="Default" />
       <updated>1599482901187</updated>
       <workItem from="1599482902794" duration="388000" />
-      <workItem from="1599483299433" duration="3202000" />
+      <workItem from="1599483299433" duration="51439000" />
+      <workItem from="1599567710679" duration="38995000" />
     </task>
+    <task id="LOCAL-00001" summary="Initial commit. Added Paperbase template.">
+      <created>1599486733964</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1599486733964</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -103,19 +129,64 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial commit. Added Paperbase template." />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial commit. Added Paperbase template." />
   </component>
   <component name="WindowStateProjectService">
     <state x="479" y="211" width="1089" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1599486562899">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="479" y="211" width="1089" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2048.1112@0.0.2048.1112" timestamp="1599486562899" />
+    <state x="772" y="357" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1599507695133">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="772" y="357" key="#com.intellij.fileTypes.FileTypeChooser/0.0.2048.1112@0.0.2048.1112" timestamp="1599507695133" />
+    <state x="755" y="303" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1599534830793">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="755" y="303" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.2048.1112@0.0.2048.1112" timestamp="1599534830793" />
+    <state width="2027" height="305" key="GridCell.Tab.0.bottom" timestamp="1599649428608">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2027" height="305" key="GridCell.Tab.0.bottom/0.0.2048.1112@0.0.2048.1112" timestamp="1599649428608" />
+    <state width="2027" height="305" key="GridCell.Tab.0.center" timestamp="1599649428608">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2027" height="305" key="GridCell.Tab.0.center/0.0.2048.1112@0.0.2048.1112" timestamp="1599649428608" />
+    <state width="2027" height="305" key="GridCell.Tab.0.left" timestamp="1599649428608">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2027" height="305" key="GridCell.Tab.0.left/0.0.2048.1112@0.0.2048.1112" timestamp="1599649428608" />
+    <state width="2027" height="305" key="GridCell.Tab.0.right" timestamp="1599649428608">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2027" height="305" key="GridCell.Tab.0.right/0.0.2048.1112@0.0.2048.1112" timestamp="1599649428608" />
+    <state x="617" y="289" key="Vcs.Push.Dialog.v2" timestamp="1599486747708">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="617" y="289" key="Vcs.Push.Dialog.v2/0.0.2048.1112@0.0.2048.1112" timestamp="1599486747708" />
+    <state x="629" y="167" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1599548812322">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="629" y="167" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.2048.1112@0.0.2048.1112" timestamp="1599548812322" />
     <state x="829" y="469" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1599483310812">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="829" y="469" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.2048.1112@0.0.2048.1112" timestamp="1599483310812" />
-    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup" timestamp="1599486154091">
+    <state x="724" y="154" width="600" height="804" key="find.popup" timestamp="1599637826420">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup/0.0.2048.1112@0.0.2048.1112" timestamp="1599486154091" />
+    <state x="724" y="154" width="600" height="804" key="find.popup/0.0.2048.1112@0.0.2048.1112" timestamp="1599637826420" />
+    <state x="681" y="259" key="run.anything.popup" timestamp="1599632617915">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="681" y="259" key="run.anything.popup/0.0.2048.1112@0.0.2048.1112" timestamp="1599632617915" />
+    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup" timestamp="1599648259004">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup/0.0.2048.1112@0.0.2048.1112" timestamp="1599648259004" />
   </component>
 </project>
