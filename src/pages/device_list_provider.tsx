@@ -23,7 +23,7 @@ import {DeviceListPage} from "./device_list";
 
 const useStyles = makeStyles(theme => createStyles({
     paper: {
-        maxWidth: 936,
+        maxWidth: 960,
         margin: 'auto',
         overflow: 'hidden',
     },
@@ -43,21 +43,6 @@ const useStyles = makeStyles(theme => createStyles({
         margin: '40px 16px',
     },
 }))
-
-function DeviceDigestProviderView(props: {
-    device: IDevice
-}) {
-    return <ListItem>
-        <ListItemText primary={props.device.name}
-                      secondary={props.device.description.substring(0, 100)}
-        />
-        <ListItemSecondaryAction>
-            <IconButton edge="end" aria-label="delete">
-                <ExpandMoreIcon />
-            </IconButton>
-        </ListItemSecondaryAction>
-    </ListItem>
-}
 
 export function DeviceListProviderPage(props: RouteComponentProps) {
     return <DeviceListPage provider={true}/>

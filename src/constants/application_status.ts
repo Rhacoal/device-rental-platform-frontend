@@ -3,6 +3,12 @@ export interface ApplicationStatusCode {
     description: string,
 }
 
+export const ApplicationStatusOrder : {[i: string]: number} = {
+    "0": -1,
+    "1": 0,
+    "-1": 0,
+}
+
 export const ApplicationPending: ApplicationStatusCode = {
     code: 0,
     description: "等待处理"

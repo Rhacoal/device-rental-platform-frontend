@@ -82,7 +82,7 @@ const columns: Column[] = [
     },
 ];
 
-function KeyValueView(props: {
+export function KeyValueView(props: {
     keyString: ReactNode,
     value: ReactNode,
 }) {

@@ -4,6 +4,7 @@ export const ErrorCode = {
 
     "wrong_password": 101,
     "user_not_exist": 102,
+    "deviced_already_borrowed": 404,
 }
 
 export const ErrorMessage = {

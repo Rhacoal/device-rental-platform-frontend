@@ -15,7 +15,7 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 const styles = (theme: Theme) =>
   createStyles({
     paper: {
-      maxWidth: 936,
+      maxWidth: 960,
       margin: 'auto',
       overflow: 'hidden',
     },

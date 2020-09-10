@@ -41,10 +41,12 @@ import TablePagination from "@material-ui/core/TablePagination";
 import {DeviceDetailSubPage} from "./device_detail_subpage";
 import {useSelector} from "react-redux";
 import {IStore} from "../store/store";
+import clsx from "clsx";
+import {toShortTimeString} from "../utils/time_format";
 
 const useStyles = makeStyles(theme => createStyles({
     paper: {
-        // maxWidth: 936,
+        // maxWidth: 960,
         margin: 'auto',
         overflow: 'hidden',
     },
@@ -94,10 +96,13 @@ const useRowStyles = makeStyles(theme => createStyles({
     selectEmpty: {
         marginTop: theme.spacing(2),
     },
+    deviceDetail: {
+        backgroundColor: "#fdfeff",
+    },
 }));
 
 interface Column {
-    id: 'name' | 'provider_name';
+    id: 'name' | 'provider_name' | 'borrower_name' | 'return_time';
     label: string;
     minWidth?: number;
     align?: 'right';
@@ -105,9 +110,10 @@ interface Column {
 }
 
 const columns: Column[] = [
-    {id: 'name', label: '设备名称', minWidth: 80},
-    {id: 'provider_name', label: '提供者', minWidth: 80},
-    {id: 'provider_name', label: '当前借用者', minWidth: 80},
+    {id: 'name', label: '设备名称', minWidth: undefined},
+    {id: 'provider_name', label: '提供者', minWidth: 120},
+    {id: 'borrower_name', label: '当前借用者', minWidth: 120},
+    {id: 'return_time', label: '预计归还', minWidth: 120},
 ];
 
 function DeviceRow(props: { row: IDevice, collapse: React.ReactNode }) {
@@ -119,7 +125,7 @@ function DeviceRow(props: { row: IDevice, collapse: React.ReactNode }) {
         <React.Fragment>
             <TableRow className={classes.root}>
                 <TableCell
-                    style={{maxWidth: "30px"}}>
+                    style={{width: "30px"}}>
                     <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
                         {open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
                     </IconButton>
@@ -133,8 +139,11 @@ function DeviceRow(props: { row: IDevice, collapse: React.ReactNode }) {
                 <TableCell>
                     {row.borrower ? row.borrower.name : ""}
                 </TableCell>
+                <TableCell>
+                    {row.return_time ? toShortTimeString(row.return_time) : ""}
+                </TableCell>
             </TableRow>
-            <TableRow>
+            <TableRow className={clsx(classes.deviceDetail)}>
                 <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={columns.length + 1}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         {props.collapse}
@@ -146,8 +155,9 @@ function DeviceRow(props: { row: IDevice, collapse: React.ReactNode }) {
 }
 
 export function DeviceListPage(props: {
-    provider?: boolean
-    borrower?: boolean
+    provider?: boolean,
+    borrower?: boolean,
+    admin?: boolean
 }) {
     const classes = useStyles(useTheme());
     const [devices, setDevices] = React.useState([] as IDevice[]);
@@ -251,7 +261,7 @@ export function DeviceListPage(props: {
                                             <TableCell
                                                 key={column.id}
                                                 align={column.align}
-                                                style={{minWidth: column.minWidth}}
+                                                style={{width: column.minWidth}}
                                             >
                                                 {column.label}
                                             </TableCell>
@@ -262,7 +272,13 @@ export function DeviceListPage(props: {
                                     {actualList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
                                         return (
                                             <DeviceRow key={index} row={row} collapse={
-                                                <DeviceDetailSubPage deviceDetail={row} showBorrowButton={!props.borrower && !props.provider}/>
+                                                <DeviceDetailSubPage deviceDetail={row}
+                                                                     showBorrowButton={!props.admin && !props.borrower && !props.provider}
+                                                                     showEditButton={!!props.admin || (!!userInfo && !!props.provider && row.owner.user_id === userInfo.user_id)}
+                                                                     showDeleteButton={!!props.admin}
+                                                                     showReturnButton={!!props.borrower}
+                                                                     onEdit={() => setRefresh(!refresh)}
+                                                />
                                             }/>
                                         );
                                     })}

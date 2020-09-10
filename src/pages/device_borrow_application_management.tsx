@@ -4,6 +4,8 @@ import {applyBorrowDeviceAPIs, deviceList, Result} from "../wrapper/requests";
 import {RouteComponentProps} from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import {ApplicationViewPage} from "./application_admin";
+import {KeyValueView} from "./user_list";
+import {VerticalSpacer} from "../components/vertical_spacer";
 
 const deviceBorrowApplicationPageProps = {
     apiRoot: applyBorrowDeviceAPIs,
@@ -19,13 +21,25 @@ const deviceBorrowApplicationPageProps = {
     filterPlaceholder: "设备名称/描述",
     renderer: (value: IDeviceBorrowApplication) => {
         return <React.Fragment>
-            <Typography variant="h6" component="h1">申请人: {value.applicant.name}</Typography>
-            <Typography variant="body2" color="secondary">
-                {value.applicant.student_id}&nbsp;
-                {value.applicant.email}</Typography>
-            <Typography variant="h6">申请借用设备</Typography>
-            <Typography variant="body1">{value.device.name}({value.device.device_id})</Typography>
-            <Typography variant="body1">{value.device.description}</Typography>
+            {value.handler ? <React.Fragment>
+                <KeyValueView keyString={"处理人"}
+                              value={value.handler.name}/>
+                <KeyValueView keyString={"邮箱"}
+                              value={value.handler.email}/>
+                <VerticalSpacer />
+            </React.Fragment> : null}
+            <KeyValueView keyString={"申请原因"}
+                          value={value.reason}/>
+            <KeyValueView keyString={"申请人"}
+                          value={value.applicant.name}/>
+            <KeyValueView keyString={"学号"}
+                          value={value.applicant.student_id}/>
+            <KeyValueView keyString={"邮箱"}
+                          value={value.applicant.email}/>
+            <VerticalSpacer />
+            <KeyValueView keyString={"设备提供者"} value={value.device.owner.name}/>
+            <KeyValueView keyString={"设备信息"} value={value.device.description}/>
+
         </React.Fragment>
     },
     titleRenderer: (value: IDeviceBorrowApplication) => {

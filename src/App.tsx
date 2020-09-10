@@ -26,6 +26,7 @@ import {
 } from "./pages/device_create_application_management";
 import {DeviceListProviderPage, DeviceListSelfPage} from "./pages/device_list_provider";
 import {Copyright} from "./components/copyrights";
+import {DeviceListAdminPage} from "./pages/device_list_admin";
 
 
 let theme = createMuiTheme({
@@ -199,6 +200,7 @@ function UserInfoComponent(props: RouteComponentProps) {
         <Route path={LocalUrls.devices} component={DeviceListPage}/>
         {/* 管理员页面 */}
         <Route path={LocalUrls.user_admin} component={UserListPage}/>
+        <Route path={LocalUrls.device_admin} component={DeviceListAdminPage}/>
         <Route path={LocalUrls.borrow_handle_admin} component={DeviceBorrowApplicationAdminPage}/>
         <Route path={LocalUrls.become_provider_admin} component={PermissionApplicationAdminPage}/>
         <Route path={LocalUrls.create_device_handle_admin} component={DeviceCreateApplicationAdminPage}/>

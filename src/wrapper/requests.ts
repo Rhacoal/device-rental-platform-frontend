@@ -10,7 +10,7 @@ import {
 import {ApplicationUrl, Urls} from "./urls";
 import {ErrorCode, ErrorMessage} from "./error_code";
 import {store, UserInfoSlice} from "../store/store";
-import {UserGroup} from "../constants/group";
+import {UserGroup, UserGroupProvider} from "../constants/group";
 
 export type FailureObject = { "success": false, "error_code": number, "message": string };
 
@@ -243,6 +243,14 @@ export const deviceDetail = async (deviceId: number) =>
 
 
 /**
+ * 归还设备.
+ * @param deviceId 设备 ID
+ */
+export const returnDevice = async (deviceId: number) =>
+    await doAuthenticatedRequest("POST", Urls.return_device(deviceId), null, json => null);
+
+
+/**
  * 修改设备信息.
  * @param deviceId 设备 ID
  * @param newName 新的名称
@@ -285,7 +293,7 @@ export const commentList = async (deviceId: number) =>
  * @param content 评论内容
  */
 export const commentSend = async (deviceId: number, content: string) =>
-    await doAuthenticatedRequest("GET", Urls.comment_post(deviceId), {content}, json => json.comments as IComment[]);
+    await doAuthenticatedRequest("POST", Urls.comment_post(deviceId), {content}, json => json.comment_id as number);
 
 /**
  * 删除评论.
@@ -347,22 +355,22 @@ export const applyBorrowDevice = async (deviceId: number, reason: string, return
  * @param reason 理由
  * @return 申请 ID
  */
-export const applyBecomeProvider = async (group: UserGroup, reason: string) =>
+export const applyBecomeProvider = async (reason: string) =>
     await doAuthenticatedRequest("POST", Urls.apply_become_provider.baseUrl, {
-        group,
+        group: UserGroupProvider,
         reason
     }, json => json.apply_id as number);
 
 /**
  * 申请上架设备.
- * @param name 设备名称
- * @param description 设备描述
+ * @param device_name 设备名称
+ * @param device_description 设备描述
  * @return 申请 ID
  */
-export const applyCreateDevice = async (name: string, description: string) =>
+export const applyCreateDevice = async (device_name: string, device_description: string) =>
     await doAuthenticatedRequest("POST", Urls.apply_create_device.baseUrl, {
-        name,
-        description
+        device_name,
+        device_description
     }, json => json.apply_id as number);
 
 export const applyBorrowDeviceAPIs = createApplicationFunctions<IDeviceBorrowApplication>(Urls.apply_borrow_device);

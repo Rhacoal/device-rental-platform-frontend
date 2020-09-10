@@ -1,5 +1,9 @@
 export type UserGroup = 'admin' | 'provider' | 'borrower';
 
+export const UserGroupAdmin: UserGroup = 'admin';
+export const UserGroupProvider: UserGroup = 'provider';
+export const UserGroupBorrower: UserGroup = 'borrower';
+
 export const UserGroupName = {
     "admin": "管理员",
     "provider": "设备提供者",

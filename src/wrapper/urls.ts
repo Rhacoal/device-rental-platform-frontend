@@ -28,6 +28,7 @@ export const Urls = {
     "user_edit": (userId: number) => `/api/v1/admin/user/${userId}`,
 
     "device_list": "/api/v1/device_list",
+    "return_device": (deviceId: number) => `/api/v1/apply/return-device/${deviceId}`,
     "device_detail": (deviceId: number) => `/api/v1/device/${deviceId}`,
 
     "device_borrowed_list": (userId: number) => `/api/v1/borrowed-device/${userId}`,

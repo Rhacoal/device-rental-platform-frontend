@@ -30,9 +30,9 @@ const unloggedInCategories = [
         id: '用户',
         permission: ['borrower', 'admin', 'provider'],
         children: [
-            {id: '登录', icon: <PeopleIcon/>, link: LocalUrls.login},
-            {id: '注册', icon: <AddBoxIcon/>, link: LocalUrls.register},
-            {id: '注册 (Legacy)', icon: <AddBoxIcon/>, link: LocalUrls.register + "?legacy"},
+            {id: '登录', icon: <PeopleIcon/>, link: LocalUrls.login, except: []},
+            {id: '注册', icon: <AddBoxIcon/>, link: LocalUrls.register, except: []},
+            {id: '注册 (Legacy)', icon: <AddBoxIcon/>, link: LocalUrls.register + "?legacy", except: []},
         ],
     },
 ]
@@ -42,30 +42,30 @@ const categories = [
         id: '管理',
         permission: ['admin'],
         children: [
-            {id: '用户管理', icon: <PeopleIcon/>, link: LocalUrls.user_admin},
-            {id: '设备管理', icon: <DnsRoundedIcon/>, link: LocalUrls.device_admin},
-            {id: '提权申请处理', icon: <DoneAllIcon/>, link: LocalUrls.become_provider_admin},
-            {id: '借用申请处理', icon: <DoneAllIcon/>, link: LocalUrls.borrow_handle_admin},
-            {id: '上架申请处理', icon: <DoneAllIcon/>, link: LocalUrls.create_device_handle_admin},
+            {id: '用户管理', icon: <PeopleIcon/>, link: LocalUrls.user_admin, except: []},
+            {id: '设备管理', icon: <DnsRoundedIcon/>, link: LocalUrls.device_admin, except: []},
+            {id: '提权申请处理', icon: <DoneAllIcon/>, link: LocalUrls.become_provider_admin, except: []},
+            {id: '借用申请处理', icon: <DoneAllIcon/>, link: LocalUrls.borrow_handle_admin, except: []},
+            {id: '上架申请处理', icon: <DoneAllIcon/>, link: LocalUrls.create_device_handle_admin, except: []},
         ],
     },
     {
         id: '设备借用',
         permission: ['borrower', 'admin', 'provider'],
         children: [
-            {id: '所有设备', icon: <DnsRoundedIcon/>, link: LocalUrls.devices},
-            {id: '我借用的', icon: <SettingsIcon/>, link: LocalUrls.borrowed_devices},
-            {id: '我的设备申请', icon: <DnsRoundedIcon/>, link: LocalUrls.apply_borrow},
-            {id: '申请成为设备提供者', icon: <DnsRoundedIcon/>, link: LocalUrls.become_provider},
+            {id: '所有设备', icon: <DnsRoundedIcon/>, link: LocalUrls.devices, except: []},
+            {id: '我借用的', icon: <SettingsIcon/>, link: LocalUrls.borrowed_devices, except: []},
+            {id: '我的设备申请', icon: <DnsRoundedIcon/>, link: LocalUrls.apply_borrow, except: []},
+            {id: '申请成为设备提供者', icon: <DnsRoundedIcon/>, link: LocalUrls.become_provider, except: ['provider', 'admin']},
         ],
     },
     {
         id: '设备管理员',
         permission: ['admin', 'provider'],
         children: [
-            {id: '我提供的设备', icon: <DnsRoundedIcon/>, link: LocalUrls.devices_provider},
-            {id: '借用申请处理', icon: <DoneAllIcon/>, link: LocalUrls.borrow_handle_provider},
-            {id: '上架设备', icon: <AddBoxIcon/>, link: LocalUrls.create_device_provider},
+            {id: '我提供的设备', icon: <DnsRoundedIcon/>, link: LocalUrls.devices_provider, except: []},
+            {id: '借用申请处理', icon: <DoneAllIcon/>, link: LocalUrls.borrow_handle_provider, except: []},
+            {id: '上架设备', icon: <AddBoxIcon/>, link: LocalUrls.create_device_provider, except: []},
         ],
     },
 ];
@@ -156,23 +156,24 @@ function Navigator(props: NavigatorProps) {
                                 {id}
                             </ListItemText>
                         </ListItem>
-                        {children.map(({id: childId, icon, link}) => (
-                            <ListItem
-                                key={childId}
-                                button
-                                className={clsx(classes.item, (link.startsWith(currentPath)) && classes.itemActiveItem)}
-                                component={Link}
-                                to={link}
-                            >
-                                <ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon>
-                                <ListItemText
-                                    classes={{
-                                        primary: classes.itemPrimary,
-                                    }}
+                        {children.map(({id: childId, icon, link, except}) => (
+                            !props.userGroup || (props.userGroup && except.indexOf(props.userGroup) === -1) ?
+                                <ListItem
+                                    key={childId}
+                                    button
+                                    className={clsx(classes.item, (link.startsWith(currentPath)) && classes.itemActiveItem)}
+                                    component={Link}
+                                    to={link}
                                 >
-                                    {childId}
-                                </ListItemText>
-                            </ListItem>
+                                    <ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon>
+                                    <ListItemText
+                                        classes={{
+                                            primary: classes.itemPrimary,
+                                        }}
+                                    >
+                                        {childId}
+                                    </ListItemText>
+                                </ListItem> : null
                         ))}
                         <Divider className={classes.divider}/>
                     </React.Fragment>

@@ -17,6 +17,7 @@ export interface IDevice {
     "borrowed_time": null | number,
     "owner": IUserInfo,
     "created_time": number,
+    "return_time": null | number,
 }
 
 export interface IComment {
@@ -24,6 +25,7 @@ export interface IComment {
     "device_id": number,
     "comment_time": number,
     "content": string,
+    "commenter": IUserInfo
 }
 
 export interface IApplication {
