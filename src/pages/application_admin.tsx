@@ -20,7 +20,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import HelpIcon from '@material-ui/icons/Help';
 import {
-    ApplicationApproved,
+    ApplicationApproved, ApplicationApprovedReturned,
     ApplicationPending,
     ApplicationRejected, ApplicationStatusOrder,
     ApplicationUnknown
@@ -38,6 +38,7 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import {MaxApplicationsPerPage, MaxDevicesPerPage} from "../constants/constants";
 import {Alert, Pagination} from "@material-ui/lab";
 import {formatTime, toShortTimeString} from "../utils/time_format";
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 const useStyles = makeStyles(theme => createStyles({
     listItem: {
@@ -117,6 +118,13 @@ function ApplicationStatus(props: {
                                 {ApplicationRejected.description}
                             </Typography>
                         </React.Fragment>
+                    case ApplicationApprovedReturned.code:
+                        return <React.Fragment>
+                            <CheckCircleIcon color="primary"/>
+                            <Typography color="primary" variant="body1" component="span">
+                                {ApplicationApprovedReturned.description}
+                            </Typography>
+                        </React.Fragment>
                     default:
                         return <React.Fragment>
                             <HelpIcon className={classes.unknownStatus}/>
@@ -182,6 +190,13 @@ export function ApplicationView<T extends IApplication>(props: ApplicationViewPr
                         申请时间: {formatTime(props.application.apply_time)}
                     </Typography> : null
             }
+            {
+                props.application.status == ApplicationApprovedReturned.code && (props.application as any).return_time ?
+                    <Typography variant="body2"
+                                color="textSecondary">
+                        归还时间: {formatTime((props.application as any).return_time)}
+                    </Typography> : null
+            }
             {props.canApprove && props.application.status === ApplicationPending.code ? <div style={{
                 display: "flex",
                 justifyContent: "flex-end",
@@ -219,12 +234,15 @@ const useApplicationPageStyles = makeStyles(theme => createStyles({
         margin: '40px 16px',
     },
     contentWrapperLight: {
-        margin: theme.spacing(2, 1),
+        margin: theme.spacing(0, 0, 1.5),
         display: "flex",
         flexDirection: "column",
     },
     marginTopBottom1: {
         margin: theme.spacing(1, 0),
+    },
+    divider: {
+        backgroundColor: theme.palette.divider,
     }
 }))
 
@@ -355,12 +373,15 @@ export function ApplicationViewPage<T extends IApplication>(props: {
             ) : (
                 <div className={classes.contentWrapperLight}><List>
                     {actualList.slice(MaxDevicesPerPage * (page - 1), MaxDevicesPerPage * page).map((value, index) => (
-                        <ApplicationView application={value} applicationTitle={props.titleRenderer(value)} key={index}
-                                         canApprove={props.canApprove} onApprove={handleApprove}
-                                         onReject={handleReject}>
-                            {handleErrorMessage ? <Alert className={classes.marginTopBottom1} severity="error">{handleErrorMessage}</Alert> : null}
-                            {props.renderer(value)}
-                        </ApplicationView>
+                        <React.Fragment key={index}>
+                            <ApplicationView application={value} applicationTitle={props.titleRenderer(value)}
+                                             canApprove={props.canApprove} onApprove={handleApprove}
+                                             onReject={handleReject}>
+                                {handleErrorMessage ? <Alert className={classes.marginTopBottom1} severity="error">{handleErrorMessage}</Alert> : null}
+                                {props.renderer(value)}
+                            </ApplicationView>
+                            <Divider className={classes.divider} component="li"/>
+                        </React.Fragment>
                     ))}
                 </List>
                     <Pagination style={{alignSelf: "center"}}

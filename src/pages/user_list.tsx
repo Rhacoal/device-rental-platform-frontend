@@ -28,7 +28,7 @@ import {IStore} from "../store/store";
 import {deviceList, userChangeGroup, userList} from "../wrapper/requests";
 import {Alert} from "@material-ui/lab";
 import {UserGroup, UserGroupName} from "../constants/group";
-import { formatTime } from '../utils/time_format';
+import {formatTime} from '../utils/time_format';
 
 const useStyles = makeStyles({
     root: {
@@ -56,7 +56,7 @@ const useRowStyles = makeStyles(theme => createStyles({
     },
     userGroupChange: {
         display: "flex",
-        alignItems: "baseline",
+        alignItems: "center",
     }
 }));
 
@@ -153,19 +153,20 @@ function Row(props: { row: IUserInfo }) {
                                         <MenuItem value={"admin"}>{UserGroupName.admin}</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <Button onClick={() => {
-                                    setMessage("");
-                                    userChangeGroup(row.user_id, newGroup).then((result) => {
-                                        if (result.success) {
-                                            row.group = newGroup;
-                                            setRefresh(!refresh);
-                                        } else {
-                                            setMessage("设置失败: " + result.message);
-                                        }
-                                    })
-                                }}>修改用户组</Button>
+                                <Button variant="outlined"
+                                        onClick={() => {
+                                            setMessage("");
+                                            userChangeGroup(row.user_id, newGroup).then((result) => {
+                                                if (result.success) {
+                                                    row.group = newGroup;
+                                                    setRefresh(!refresh);
+                                                } else {
+                                                    setMessage("设置失败: " + result.message);
+                                                }
+                                            })
+                                        }}>修改用户组</Button>
                             </div>
-                            { message ? <Alert severity="error">{message}</Alert> : null}
+                            {message ? <Alert severity="error">{message}</Alert> : null}
                         </Box>
                     </Collapse>
                 </TableCell>

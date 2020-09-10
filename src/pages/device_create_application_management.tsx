@@ -52,9 +52,7 @@ const deviceCreateApplicationProps = {
             <VerticalSpacer />
             <KeyValueView keyString={"设备名称"}
                           value={value.device_name}/>
-            <KeyValueView keyString={"设备信息"} value={
-                <Typography variant="body1">{value.device_description}</Typography>
-            }/>
+            <KeyValueView keyString={"设备信息"} value={value.device_description}/>
         </React.Fragment>
     },
     titleRenderer: (value: ICreateDeviceApplication) => {
@@ -139,7 +137,7 @@ export function DeviceCreateApplicationProviderPage(props: RouteComponentProps) 
             <div className="title">
                 <Typography variant="h5" component="span">上架申请</Typography>
                 <ButtonGroup component="span">
-                    <Button variant="contained" onClick={() => {
+                    <Button variant={open ? "outlined" : "contained"} onClick={() => {
                         setOpen(true);
                     }}
                             color="primary">
@@ -164,11 +162,18 @@ export function DeviceCreateApplicationProviderPage(props: RouteComponentProps) 
                                    setDeviceDescription(event.target.value)
                                }}
                     />
-                    <Button color="primary"
-                            variant="outlined"
-                            onClick={handleSubmitApplication}>
-                        提交申请
-                    </Button>
+                    <ButtonGroup>
+                        <Button color="primary"
+                                variant="contained"
+                                onClick={handleSubmitApplication}>
+                            提交申请
+                        </Button>
+                        <Button color="default"
+                                variant="contained"
+                                onClick={() => setOpen(false)}>
+                            取消
+                        </Button>
+                    </ButtonGroup>
                     {errorMessage ? <Alert severity="error">
                         {errorMessage}
                     </Alert> : null}

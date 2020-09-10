@@ -109,6 +109,7 @@ export function DeviceCommentSubPage(props: {
         commentSend(props.deviceId, newComment).then((result) => {
             if (result.success) {
                 setRefresh(!refresh);
+                setNewComment("");
             } else {
                 setErrorMessage("发送失败: " + result.message);
             }

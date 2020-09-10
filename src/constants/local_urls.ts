@@ -18,6 +18,7 @@ export const LocalUrls = {
     "become_provider_admin": "/admin/become-provider",
     "borrow_handle_admin": "/admin/borrow",
     "create_device_handle_admin": "/admin/create-device",
+    "dashboard": "/admin/dashboard",
 
     // 设备管理
     "devices_provider": "/provider/devices",

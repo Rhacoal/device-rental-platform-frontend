@@ -5,7 +5,7 @@ import moment from 'moment';
  * @param timeStamp UTC 时间戳
  */
 export function formatTime(timeStamp: number) {
-    return moment(timeStamp * 1000).format("YYYY年M月D日 hh:mm:ss");
+    return moment(timeStamp * 1000).format("YYYY年M月D日 HH:mm:ss");
 }
 
 /**
@@ -24,9 +24,9 @@ export function today() {
 }
 
 export function nowTime() {
-    return moment().format("hh:mm");
+    return moment().format("HH:mm");
 }
 
 export function getTimeStamp(date: string, time: string): string {
-    return moment(`${date} ${time}`, "YYYY/MM/DD hh:mm").format("X");
+    return moment(`${date} ${time}`, "YYYY/MM/DD HH:mm").format("X");
 }

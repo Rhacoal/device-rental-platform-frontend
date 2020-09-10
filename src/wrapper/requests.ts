@@ -376,3 +376,9 @@ export const applyCreateDevice = async (device_name: string, device_description:
 export const applyBorrowDeviceAPIs = createApplicationFunctions<IDeviceBorrowApplication>(Urls.apply_borrow_device);
 export const applyBecomeProviderAPIs = createApplicationFunctions<IPermissionApplication>(Urls.apply_become_provider);
 export const applyCreateDeviceAPIs = createApplicationFunctions<ICreateDeviceApplication>(Urls.apply_create_device);
+
+/**
+ * Dashboard.
+ */
+export const getDashboard = async () =>
+    await doAuthenticatedRequest("GET", Urls.dashboard, null, json => json.dashboard);

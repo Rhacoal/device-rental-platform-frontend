@@ -24,6 +24,7 @@ import {Strings} from "../constants/strings";
 import {LocalUrls} from "../constants/local_urls";
 import {Link} from "react-router-dom";
 import {UserGroup} from "../constants/group";
+import PieChartIcon from '@material-ui/icons/PieChart';
 
 const unloggedInCategories = [
     {
@@ -47,15 +48,16 @@ const categories = [
             {id: '提权申请处理', icon: <DoneAllIcon/>, link: LocalUrls.become_provider_admin, except: []},
             {id: '借用申请处理', icon: <DoneAllIcon/>, link: LocalUrls.borrow_handle_admin, except: []},
             {id: '上架申请处理', icon: <DoneAllIcon/>, link: LocalUrls.create_device_handle_admin, except: []},
+            {id: '统计信息', icon: <PieChartIcon/>, link: LocalUrls.dashboard, except: []},
         ],
     },
     {
         id: '设备借用',
         permission: ['borrower', 'admin', 'provider'],
         children: [
-            {id: '所有设备', icon: <DnsRoundedIcon/>, link: LocalUrls.devices, except: []},
-            {id: '我借用的', icon: <SettingsIcon/>, link: LocalUrls.borrowed_devices, except: []},
-            {id: '我的设备申请', icon: <DnsRoundedIcon/>, link: LocalUrls.apply_borrow, except: []},
+            {id: '设备列表', icon: <DnsRoundedIcon/>, link: LocalUrls.devices, except: []},
+            {id: '我借用的', icon: <DnsRoundedIcon/>, link: LocalUrls.borrowed_devices, except: []},
+            {id: '我的借用申请', icon: <DnsRoundedIcon/>, link: LocalUrls.apply_borrow, except: []},
             {id: '申请成为设备提供者', icon: <DnsRoundedIcon/>, link: LocalUrls.become_provider, except: ['provider', 'admin']},
         ],
     },

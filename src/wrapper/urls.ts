@@ -23,6 +23,7 @@ export const Urls = {
     "mail_verify": "/api/v1/user/mail-verify",
     "user_self": "/api/v1/user",
     "user_others": (userId: number) => `/api/v1/user/${userId}`,
+    "dashboard": "/api/v1/dashboard",
 
     "user_list": "/api/v1/admin/user_list",
     "user_edit": (userId: number) => `/api/v1/admin/user/${userId}`,
