@@ -12,6 +12,8 @@ export const LocalUrls = {
     "apply_borrow": "/borrow-device",
     "become_provider": "/become-provider",
 
+    "pm": "/pm",
+
     // 管理
     "user_admin": "/admin/users",
     "device_admin": "/admin/devices",

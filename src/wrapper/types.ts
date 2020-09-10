@@ -35,6 +35,7 @@ export interface IApplication {
     "apply_time": number,
     "handler": IUserInfo | null,
     "handle_time": number | null,
+    "handle_reason": string | null,
 }
 
 export interface IDeviceBorrowApplication extends IApplication {
@@ -52,6 +53,39 @@ export interface ICreateDeviceApplication extends IApplication {
     "device_name": string,
     "device_description": string,
 }
+
+export interface IPrivateMessage {
+    "pm_id": number,
+    "message": string,
+    "read": boolean,
+    "send_time": number,
+}
+
+export interface IPrivateMessageFromSystem extends IPrivateMessage {
+    "from_system": true,
+}
+
+export interface IPrivateMessageFromUser extends IPrivateMessage {
+    "from_system": false,
+    "sender": IUserInfo,
+}
+
+export type IPrivateMessageReceived = IPrivateMessageFromSystem | IPrivateMessageFromUser;
+
+export interface IPrivateMessageSent extends IPrivateMessage {
+    "receiver": IUserInfo,
+}
+
+export interface IPrivateMessageSendReceiveList {
+    "send": IPrivateMessageSent[],
+    "receive": IPrivateMessageReceived[]
+}
+
+export const PMEmergency = 102;
+export const PMImportant = 101;
+export const PMNormal = 100;
+
+export type PMType = 102 | 101 | 100;
 
 export interface IDashboard {
     // 平台设备总数
@@ -82,3 +116,5 @@ export interface IDashboard {
     "platform_borrower": number,
     // TODO: 增加可建立图表的日期相关数据
 }
+
+export type Optional<T> = T | null;

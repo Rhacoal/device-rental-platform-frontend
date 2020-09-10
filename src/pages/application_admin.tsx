@@ -1,9 +1,9 @@
 import React, {PropsWithChildren} from "react";
-import {IApplication, IDeviceBorrowApplication} from "../wrapper/types";
+import {IApplication, IDeviceBorrowApplication, Optional} from "../wrapper/types";
 import {
     Button,
     ButtonGroup,
-    Collapse,
+    Collapse, colors,
     createStyles, Divider,
     Grid,
     IconButton,
@@ -17,17 +17,17 @@ import {makeStyles} from "@material-ui/core/styles";
 import CachedIcon from '@material-ui/icons/Cached';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import HelpIcon from '@material-ui/icons/Help';
 import {
-    ApplicationApproved, ApplicationApprovedReturned,
+    ApplicationApproved, ApplicationApprovedReturned, ApplicationCanceled,
     ApplicationPending,
     ApplicationRejected, ApplicationStatusOrder,
     ApplicationUnknown
 } from "../constants/application_status";
 import clsx from "clsx";
 import {ApplicationAPISet, applyBorrowDeviceAPIs, Result} from "../wrapper/requests";
-import {Optional} from "../store/store";
 import Paper from "@material-ui/core/Paper";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -65,13 +65,32 @@ const useStyles = makeStyles(theme => createStyles({
     rejectedStatus: {
         color: theme.palette.error.main,
     },
+    canceledStatus: {
+        color: colors.grey[700],
+    },
+    marginTopBottom1: {
+        margin: theme.spacing(1, 0),
+    },
     approveButton: {
         backgroundColor: theme.palette.success.light,
         color: "#fff",
+        "&:hover": {
+            backgroundColor: theme.palette.success.main,
+        }
     },
     rejectButton: {
         backgroundColor: theme.palette.error.light,
         color: "#fff",
+        "&:hover": {
+            backgroundColor: theme.palette.error.main,
+        }
+    },
+    cancelButton: {
+        backgroundColor: theme.palette.grey.A700,
+        color: "#fff",
+        "&:hover": {
+            backgroundColor: theme.palette.grey.A400,
+        }
     },
     unknownStatus: {
         color: theme.palette.grey.A400,
@@ -118,6 +137,13 @@ function ApplicationStatus(props: {
                                 {ApplicationRejected.description}
                             </Typography>
                         </React.Fragment>
+                    case ApplicationCanceled.code:
+                        return <React.Fragment>
+                            <RemoveCircleIcon className={classes.canceledStatus}/>
+                            <Typography className={classes.canceledStatus} variant="body1" component="span">
+                                {ApplicationCanceled.description}
+                            </Typography>
+                        </React.Fragment>
                     case ApplicationApprovedReturned.code:
                         return <React.Fragment>
                             <CheckCircleIcon color="primary"/>
@@ -142,12 +168,15 @@ export type ApplicationViewProps<T extends IApplication> = PropsWithChildren<{
     application: T,
     applicationTitle: string,
     canApprove: boolean,
-    onApprove: (id: number) => unknown,
-    onReject: (id: number) => unknown,
+    canCancel: boolean,
+    onApprove: (id: number, reason: string) => unknown,
+    onReject: (id: number, reason: string) => unknown,
+    onCancel: (id: number, reason: string) => unknown,
 }>;
 
 export function ApplicationView<T extends IApplication>(props: ApplicationViewProps<T>) {
     const classes = useStyles(useTheme());
+    const [handleReason, setHandleReason] = React.useState("");
     const [expanded, setExpanded] = React.useState(false);
     const handleExpandClick = () => setExpanded(!expanded);
     return <ListItem className={classes.listItem}>
@@ -197,15 +226,37 @@ export function ApplicationView<T extends IApplication>(props: ApplicationViewPr
                         归还时间: {formatTime((props.application as any).return_time)}
                     </Typography> : null
             }
-            {props.canApprove && props.application.status === ApplicationPending.code ? <div style={{
-                display: "flex",
-                justifyContent: "flex-end",
-            }}><ButtonGroup>
-                <Button className={classes.approveButton} variant="contained"
-                        onClick={() => props.onApprove(props.application.apply_id)}>通过</Button>
-                <Button className={classes.rejectButton} variant="contained"
-                        onClick={() => props.onReject(props.application.apply_id)}>拒绝</Button>
-            </ButtonGroup></div> : null}
+            {props.canApprove && props.application.status === ApplicationPending.code ? <React.Fragment>
+                <TextField fullWidth
+                           variant="outlined"
+                           value={handleReason}
+                           placeholder="备注"
+                           multiline
+                           rows={2}
+                           onChange={(event) => setHandleReason(event.target.value)}
+                           className={classes.marginTopBottom1}
+                />
+                <div style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                }}><ButtonGroup>
+                    <Button className={classes.approveButton} variant="contained"
+                            onClick={() => props.onApprove(props.application.apply_id, handleReason)}>通过</Button>
+                    <Button className={classes.rejectButton} variant="contained"
+                            onClick={() => props.onReject(props.application.apply_id, handleReason)}>拒绝</Button>
+                    <Button className={classes.cancelButton} variant="contained"
+                            onClick={() => props.onCancel(props.application.apply_id, handleReason)}>撤销</Button>
+                </ButtonGroup></div>
+            </React.Fragment> : null}
+            {!props.canApprove && props.canCancel && props.application.status === ApplicationPending.code ? <React.Fragment>
+                <div style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                }}><ButtonGroup>
+                    <Button className={classes.cancelButton} variant="contained"
+                            onClick={() => props.onCancel(props.application.apply_id, handleReason)}>撤销</Button>
+                </ButtonGroup></div>
+            </React.Fragment> : null}
             {props.children}
         </Collapse>
     </ListItem>
@@ -306,23 +357,31 @@ export function ApplicationViewPage<T extends IApplication>(props: {
         setRefresh(!refresh);
     }
 
-    const handleApprove = (id: number) => {
-        props.apiRoot.approve(id).then((result) => {
+    const handleApprove = (id: number, reason: string) => {
+        props.apiRoot.approve(id, reason).then((result) => {
             if (result.success) {
-                triggerRefresh()
+                triggerRefresh();
             } else {
-                setRefreshTimeout(true);
                 setHandleErrorMessage(result.message);
             }
         });
     }
 
-    const handleReject = (id: number) => {
-        props.apiRoot.reject(id).then((result) => {
+    const handleReject = (id: number, reason: string) => {
+        props.apiRoot.reject(id, reason).then((result) => {
             if (result.success) {
                 triggerRefresh()
             } else {
-                setRefreshTimeout(true);
+                setHandleErrorMessage(result.message);
+            }
+        });
+    }
+
+    const handleCancel = (id: number, reason: string) => {
+        props.apiRoot.cancel(id, reason).then((result) => {
+            if (result.success) {
+                triggerRefresh()
+            } else {
                 setHandleErrorMessage(result.message);
             }
         });
@@ -375,9 +434,10 @@ export function ApplicationViewPage<T extends IApplication>(props: {
                     {actualList.slice(MaxDevicesPerPage * (page - 1), MaxDevicesPerPage * page).map((value, index) => (
                         <React.Fragment key={index}>
                             <ApplicationView application={value} applicationTitle={props.titleRenderer(value)}
-                                             canApprove={props.canApprove} onApprove={handleApprove}
-                                             onReject={handleReject}>
-                                {handleErrorMessage ? <Alert className={classes.marginTopBottom1} severity="error">{handleErrorMessage}</Alert> : null}
+                                             canApprove={props.canApprove} canCancel={true} onApprove={handleApprove}
+                                             onReject={handleReject} onCancel={handleCancel}>
+                                {handleErrorMessage ? <Alert className={classes.marginTopBottom1}
+                                                             severity="error">{handleErrorMessage}</Alert> : null}
                                 {props.renderer(value)}
                             </ApplicationView>
                             <Divider className={classes.divider} component="li"/>

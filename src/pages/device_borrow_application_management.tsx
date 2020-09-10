@@ -26,6 +26,8 @@ const deviceBorrowApplicationPageProps = {
                               value={value.handler.name}/>
                 <KeyValueView keyString={"邮箱"}
                               value={value.handler.email}/>
+                <KeyValueView keyString={"处理者备注"}
+                              value={value.handle_reason || "无"}/>
                 <VerticalSpacer />
             </React.Fragment> : null}
             <KeyValueView keyString={"申请原因"}

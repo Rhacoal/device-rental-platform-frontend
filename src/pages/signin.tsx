@@ -16,9 +16,10 @@ import {Copyright} from "../components/copyrights";
 import {Link, Redirect} from 'react-router-dom';
 import {LocalUrls} from "../constants/local_urls";
 import {useDispatch, useSelector} from "react-redux";
-import {IStore, Optional, UserInfoSlice} from "../store/store";
+import {IStore, UserInfoSlice} from "../store/store";
 import {login, register} from "../wrapper/requests";
 import {Alert} from "@material-ui/lab";
+import {Optional} from "../wrapper/types";
 
 
 const useStyles = makeStyles((theme) => ({

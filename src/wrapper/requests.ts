@@ -4,12 +4,12 @@ import {
     ICreateDeviceApplication,
     IDevice,
     IDeviceBorrowApplication,
-    IPermissionApplication,
-    IUserInfo
+    IPermissionApplication, IPrivateMessageReceived, IPrivateMessageSendReceiveList, IPrivateMessageSent,
+    IUserInfo, PMType
 } from "./types";
 import {ApplicationUrl, Urls} from "./urls";
 import {ErrorCode, ErrorMessage} from "./error_code";
-import {store, UserInfoSlice} from "../store/store";
+import {PMCountSlice, store, UserInfoSlice} from "../store/store";
 import {UserGroup, UserGroupProvider} from "../constants/group";
 
 export type FailureObject = { "success": false, "error_code": number, "message": string };
@@ -308,8 +308,9 @@ export const commentDelete = async (deviceId: number, commentId: number) =>
  */
 
 export interface ApplicationAPISet<T extends IApplication> {
-    "approve": (applyId: number) => Promise<Result<null>>,
-    "reject": (applyId: number) => Promise<Result<null>>,
+    "approve": (applyId: number, reason: string) => Promise<Result<null>>,
+    "reject": (applyId: number, reason: string) => Promise<Result<null>>,
+    "cancel": (applyId: number, reason: string) => Promise<Result<null>>,
     "self": () => Promise<Result<T[]>>,
     "provider": () => Promise<Result<T[]>>,
     "admin": () => Promise<Result<T[]>>,
@@ -321,10 +322,12 @@ export interface ApplicationAPISet<T extends IApplication> {
  */
 function createApplicationFunctions<T extends IApplication>(urlBase: ApplicationUrl): ApplicationAPISet<T> {
     return {
-        "approve": async (applyId: number) =>
-            await doAuthenticatedRequest("POST", urlBase.approveApplication(applyId), null, json => null),
-        "reject": async (applyId: number) =>
-            await doAuthenticatedRequest("POST", urlBase.rejectApplication(applyId), null, json => null),
+        "approve": async (applyId: number, reason: string) =>
+            await doAuthenticatedRequest("POST", urlBase.approveApplication(applyId), {reason}, json => null),
+        "reject": async (applyId: number, reason: string) =>
+            await doAuthenticatedRequest("POST", urlBase.rejectApplication(applyId), {reason}, json => null),
+        "cancel": async (applyId: number, reason: string) =>
+            await doAuthenticatedRequest("POST", urlBase.cancelApplication(applyId), {reason}, json => null),
         "self": async () =>
             await doAuthenticatedRequest("GET", urlBase.baseUrl, null, json => json.applications as T[]),
         "provider": async () =>
@@ -382,3 +385,86 @@ export const applyCreateDeviceAPIs = createApplicationFunctions<ICreateDeviceApp
  */
 export const getDashboard = async () =>
     await doAuthenticatedRequest("GET", Urls.dashboard, null, json => json.dashboard);
+
+/**
+ * 发送站内信.
+ * @param receiver_id 接收者 ID
+ * @param message 消息内容
+ * @param type 消息类型
+ */
+export const pmSend = async (receiver_id: number, message: string, type: PMType) =>
+    await doAuthenticatedRequest("POST", Urls.pm_send(receiver_id), {type, message}, json => null);
+
+/**
+ * 获取发送过的站内信列表.
+ */
+export const pmSendList = async () =>
+    await doAuthenticatedRequest("GET", Urls.pm_send_list, null, json => json.messages as IPrivateMessageSent[]);
+
+/**
+ * 获取接收过的站内信列表.
+ */
+export const pmReceiveList = async () =>
+    await doAuthenticatedRequest("GET", Urls.pm_receive_list, null, json => json.messages as IPrivateMessageReceived[]);
+
+/**
+ * 获取发送和接收过的站内信列表
+ */
+export const pmSendReceiveList = async () =>
+    await doAuthenticatedRequest("GET", Urls.pm_send_receive_list, null, json => json.messages as IPrivateMessageSendReceiveList)
+
+/**
+ * 全部已读.
+ */
+export const pmMarkAllRead = async () =>
+    await doAuthenticatedRequest("POST", Urls.pm_mark_all, null, json => null);
+
+/**
+ * 标记已读.
+ * @param pm_list 欲标记的 PM ID 列表
+ */
+export const pmMarkRead = async (pm_list: number[]) =>
+    await doAuthenticatedRequest("POST", Urls.pm_mark, {pm_ids: pm_list}, json => null);
+
+/**
+ * 删除所有接收过的站内信.
+ */
+export const pmDeleteAll = async () =>
+    await doAuthenticatedRequest("DELETE", Urls.pm_delete_all, null, json => null);
+
+/**
+ * 删除站内信.
+ * @param pm_id 接收过的站内信
+ */
+export const pmDelete = async (pm_id: number) =>
+    await doAuthenticatedRequest("DELETE", Urls.pm_delete(pm_id), null, json => null);
+
+/**
+ * 获取未读 PM 数量.
+ */
+export const pmUnreadCount = async () =>
+    await doAuthenticatedRequest("GET", Urls.pm_unread_count, null, json => json.count as number);
+
+
+export const canUpdateUnreadCount = {
+    value: true
+};
+let inProgress = false;
+
+/**
+ * 更新未读数量.
+ */
+export const updateUnreadCount = () => {
+    if (!canUpdateUnreadCount.value || inProgress) {
+        return;
+    }
+    inProgress = true;
+    pmUnreadCount().then((result) => {
+        inProgress = false;
+        if (result.success) {
+            store.dispatch(PMCountSlice.actions.setCount(result.data));
+        }
+    }, reason => {
+        inProgress = true;
+    })
+}

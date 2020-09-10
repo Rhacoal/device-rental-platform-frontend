@@ -29,6 +29,11 @@ export const ApplicationApprovedReturned: ApplicationStatusCode = {
     description: "已归还"
 }
 
+export const ApplicationCanceled: ApplicationStatusCode = {
+    code: 3,
+    description: "已撤销"
+}
+
 export const ApplicationUnknown: ApplicationStatusCode = {
     code: -100,
     description: "未知状态"

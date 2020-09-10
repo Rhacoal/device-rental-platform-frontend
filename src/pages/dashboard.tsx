@@ -1,8 +1,8 @@
 import React from "react";
 import {RouteComponentProps} from "react-router-dom";
 import {useSelector} from "react-redux";
-import {IStore, Optional} from "../store/store";
-import {IDashboard} from "../wrapper/types";
+import {IStore} from "../store/store";
+import {IDashboard, Optional} from "../wrapper/types";
 import {getDashboard} from "../wrapper/requests";
 import {
     Box,

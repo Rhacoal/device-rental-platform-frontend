@@ -16,7 +16,7 @@ import {
     DeviceBorrowApplicationAdminPage,
     DeviceBorrowApplicationProviderPage, DeviceBorrowApplicationSelfPage
 } from "./pages/device_borrow_application_management";
-import {selfUserInfo, userInfo} from "./wrapper/requests";
+import {canUpdateUnreadCount, selfUserInfo, updateUnreadCount, userInfo} from "./wrapper/requests";
 import {PendingLogin, Profile} from "./pages/profile";
 import {UserListPage} from "./pages/user_list";
 import {PermissionApplicationAdminPage, PermissionApplicationSelfPage} from "./pages/permission_application_management";
@@ -28,6 +28,7 @@ import {DeviceListProviderPage, DeviceListSelfPage} from "./pages/device_list_pr
 import {Copyright} from "./components/copyrights";
 import {DeviceListAdminPage} from "./pages/device_list_admin";
 import {DashboardPage} from "./pages/dashboard";
+import {PMListPage} from "./pages/private_message_page";
 
 
 let theme = createMuiTheme({
@@ -181,11 +182,15 @@ function UserInfoComponent(props: RouteComponentProps) {
             if (!user.userInfo) {
                 selfUserInfo().then((result) => {
                     if (result.success) {
+                        canUpdateUnreadCount.value = true;
+                        updateUnreadCount();
                         dispatch(UserInfoSlice.actions.setUserInfo(result.data));
                     } else {
+                        canUpdateUnreadCount.value = false;
                         setErrorMessage(result.message);
                     }
                 }, reason => {
+                    canUpdateUnreadCount.value = true;
                     setErrorMessage(reason.toString());
                 })
             }
@@ -214,6 +219,8 @@ function UserInfoComponent(props: RouteComponentProps) {
         <Route path={LocalUrls.borrowed_devices} component={DeviceListSelfPage}/>
         <Route path={LocalUrls.apply_borrow} component={DeviceBorrowApplicationSelfPage}/>
         <Route path={LocalUrls.become_provider} component={PermissionApplicationSelfPage}/>
+        {/* 私信页面 */}
+        <Route path={LocalUrls.pm} component={PMListPage}/>
         {/* Fallback 页面 */}
         <Redirect to={LocalUrls.main_page}/>
     </Switch> : <Switch>
@@ -258,6 +265,15 @@ function App() {
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            updateUnreadCount();
+        }, 20 * 1000);
+        return () => {
+            clearInterval(interval);
+        }
+    });
 
     return (
         <BrowserRouter>

@@ -1,8 +1,6 @@
 import React from "react";
-import {IUserInfo} from "../wrapper/types";
+import {IUserInfo, Optional} from "../wrapper/types";
 import {configureStore, createSlice, PayloadAction} from "@reduxjs/toolkit";
-
-export type Optional<T> = T | null;
 
 export const UserInfoSlice = createSlice({
     name: "userInfo",
@@ -29,15 +27,27 @@ export const UserInfoSlice = createSlice({
     }
 })
 
+export const PMCountSlice = createSlice({
+    name: "pmCount",
+    initialState: 0,
+    reducers: {
+        setCount(state, action: PayloadAction<number>) {
+            return action.payload
+        }
+    }
+})
+
 export interface IStore {
     user: {
         userInfo: Optional<IUserInfo>,
         loggedIn: boolean
-    }
+    },
+    pmCount: number,
 }
 
 export const store = configureStore<IStore>({
     reducer: {
         user: UserInfoSlice.reducer,
+        pmCount: PMCountSlice.reducer,
     }
 })

@@ -14,10 +14,11 @@ import {Copyright} from '../components/copyrights';
 import {Link, Redirect, RouteComponentProps} from "react-router-dom";
 import {LocalUrls} from "../constants/local_urls";
 import {login, register, registerLegacy, sendVerificationMail} from "../wrapper/requests";
-import {IStore, Optional} from "../store/store";
+import {IStore} from "../store/store";
 import {Alert, AlertTitle} from "@material-ui/lab";
 import {Simulate} from "react-dom/test-utils";
 import {useSelector} from "react-redux";
+import {Optional} from "../wrapper/types";
 
 const useStyles = makeStyles((theme) => ({
     root: {
