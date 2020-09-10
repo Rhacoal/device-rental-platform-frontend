@@ -204,6 +204,7 @@ function UserInfoComponent(props: RouteComponentProps) {
         <Route path={LocalUrls.borrow_handle_admin} component={DeviceBorrowApplicationAdminPage}/>
         <Route path={LocalUrls.become_provider_admin} component={PermissionApplicationAdminPage}/>
         <Route path={LocalUrls.create_device_handle_admin} component={DeviceCreateApplicationAdminPage}/>
+        {/* <Route path={LocalUrls.dashboard} component={DashboardPage}/> */}
         {/* 设备提供者页面 */}
         <Route path={LocalUrls.devices_provider} component={DeviceListProviderPage}/>
         <Route path={LocalUrls.borrow_handle_provider} component={DeviceBorrowApplicationProviderPage}/>
