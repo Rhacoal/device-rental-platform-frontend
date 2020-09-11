@@ -17,44 +17,47 @@ export class ApplicationUrl {
     }
 }
 
+export const SubDirectory = "";
+export const UrlPrefix = "/api/v1";
+
 export const Urls = {
-    "login": "/api/v1/user/login",
-    "logout": "/api/v1/user/logout",
-    "register": "/api/v1/user/register",
-    "register_legacy": "/api/v1/user/register-temp",
-    "mail_verify": "/api/v1/user/mail-verify",
-    "user_self": "/api/v1/user",
-    "user_others": (userId: number) => `/api/v1/user/${userId}`,
-    "dashboard": "/api/v1/dashboard",
+    "login": UrlPrefix + "/user/login",
+    "logout": UrlPrefix + "/user/logout",
+    "register": UrlPrefix + "/user/register",
+    "register_legacy": UrlPrefix + "/user/register-temp",
+    "mail_verify": UrlPrefix + "/user/mail-verify",
+    "user_self": UrlPrefix + "/user",
+    "user_others": (userId: number) => `${UrlPrefix}/user/${userId}`,
+    "dashboard": UrlPrefix + "/dashboard",
 
-    "user_list": "/api/v1/admin/user_list",
-    "user_edit": (userId: number) => `/api/v1/admin/user/${userId}`,
+    "user_list": UrlPrefix + "/admin/user_list",
+    "user_edit": (userId: number) => `${UrlPrefix}/admin/user/${userId}`,
 
-    "device_list": "/api/v1/device_list",
-    "return_device": (deviceId: number) => `/api/v1/apply/return-device/${deviceId}`,
-    "device_detail": (deviceId: number) => `/api/v1/device/${deviceId}`,
+    "device_list": UrlPrefix + "/device_list",
+    "return_device": (deviceId: number) => `${UrlPrefix}/apply/return-device/${deviceId}`,
+    "device_detail": (deviceId: number) => `${UrlPrefix}/device/${deviceId}`,
 
-    "device_borrowed_list": (userId: number) => `/api/v1/borrowed-device/${userId}`,
-    "comment_list": (deviceId: number) => `/api/v1/device/${deviceId}/comment_list`,
-    "comment_post": (deviceId: number) => `/api/v1/device/${deviceId}/comment`,
-    "comment_edit": (deviceId: number, commentId: number) => `/api/v1/device/${deviceId}/comment/${commentId}`,
+    "device_borrowed_list": (userId: number) => `${UrlPrefix}/borrowed-device/${userId}`,
+    "comment_list": (deviceId: number) => `${UrlPrefix}/device/${deviceId}/comment_list`,
+    "comment_post": (deviceId: number) => `${UrlPrefix}/device/${deviceId}/comment`,
+    "comment_edit": (deviceId: number, commentId: number) => `${UrlPrefix}/device/${deviceId}/comment/${commentId}`,
 
-    "pm_send": (receiverId: number) => `/api/v1/pm/send/${receiverId}`,
-    "pm_send_list": "/api/v1/pm/send",
-    "pm_receive_list": "/api/v1/pm/receive",
-    "pm_send_receive_list": "/api/v1/pm/send-receive",
-    "pm_mark_all": "/api/v1/pm/mark-all",
-    "pm_mark": "/api/v1/pm/mark",
-    "pm_delete_all": "/api/v1/pm/all",
-    "pm_delete": (pmId: number) => `/api/v1/pm/${pmId}`,
-    "pm_unread_count": `/api/v1/pm/unread-count`,
+    "pm_send": (receiverId: number) => `${UrlPrefix}/pm/send/${receiverId}`,
+    "pm_send_list": UrlPrefix + "/pm/send",
+    "pm_receive_list": UrlPrefix + "/pm/receive",
+    "pm_send_receive_list": UrlPrefix + "/pm/send-receive",
+    "pm_mark_all": UrlPrefix + "/pm/mark-all",
+    "pm_mark": UrlPrefix + "/pm/mark",
+    "pm_delete_all": UrlPrefix + "/pm/all",
+    "pm_delete": (pmId: number) => `${UrlPrefix}/pm/${pmId}`,
+    "pm_unread_count": `${UrlPrefix}/pm/unread-count`,
 
     // 设备借用申请
-    "apply_borrow_device": new ApplicationUrl(`/api/v1/apply/borrow-device`),
+    "apply_borrow_device": new ApplicationUrl(`${UrlPrefix}/apply/borrow-device`),
 
     // 权限提升申请
-    "apply_become_provider": new ApplicationUrl(`/api/v1/apply/become-provider`),
+    "apply_become_provider": new ApplicationUrl(`${UrlPrefix}/apply/become-provider`),
 
     // 设备上架申请
-    "apply_create_device": new ApplicationUrl(`/api/v1/apply/new-device`),
+    "apply_create_device": new ApplicationUrl(`${UrlPrefix}/apply/new-device`),
 }

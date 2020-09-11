@@ -27,8 +27,9 @@ import {
 import {DeviceListProviderPage, DeviceListSelfPage} from "./pages/device_list_provider";
 import {Copyright} from "./components/copyrights";
 import {DeviceListAdminPage} from "./pages/device_list_admin";
-import {DashboardPage} from "./pages/dashboard";
+import {DashboardPage} from "./pages/dashboard/dashboard";
 import {PMListPage} from "./pages/private_message_page";
+import {SubDirectory} from "./wrapper/urls";
 
 
 let theme = createMuiTheme({
@@ -276,7 +277,7 @@ function App() {
     });
 
     return (
-        <BrowserRouter>
+        <BrowserRouter basename={SubDirectory}>
             <Provider store={store}>
                 <ThemeProvider theme={theme}>
                     <div className={classes.root}>

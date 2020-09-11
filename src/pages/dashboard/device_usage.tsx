@@ -1,25 +1,20 @@
-import React from "react";
-import {RouteComponentProps} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {IStore} from "../store/store";
-import {IDashboard, Optional} from "../wrapper/types";
-import {getDashboard} from "../wrapper/requests";
+import {makeStyles} from "@material-ui/core/styles";
 import {
     Box,
     Card,
     CardContent,
     CardHeader,
     colors,
-    Container,
     createStyles,
-    Divider, Typography,
+    Divider,
+    Typography,
     useTheme
 } from "@material-ui/core";
-import {Alert, Skeleton} from "@material-ui/lab";
-import {Chart} from "react-google-charts";
-import {makeStyles} from "@material-ui/core/styles";
+import {IDashboard} from "../../wrapper/types";
 import clsx from "clsx";
 import {Doughnut} from "react-chartjs-2";
+import React from "react";
+
 
 const useStyles = makeStyles(() => createStyles({
     root: {
@@ -27,11 +22,11 @@ const useStyles = makeStyles(() => createStyles({
     }
 }));
 
-function DeviceUsageView(props: {
+export function DeviceUsageView(props: {
     dashboard: IDashboard
     className: string
-}) {
-    const {className, dashboard} = props;
+} & any) {
+    const {className, dashboard, ...rest} = props;
     const classes = useStyles();
     const theme = useTheme();
 
@@ -50,7 +45,7 @@ function DeviceUsageView(props: {
                 hoverBorderColor: colors.common.white
             }
         ],
-        labels: ['待归还的设备', '过期借用设备', '空闲设备']
+        labels: ['待归还', '过期借用', '空闲']
     };
 
     const options = {
@@ -77,19 +72,19 @@ function DeviceUsageView(props: {
 
     const devices = [
         {
-            title: '待归还的设备',
+            title: '待归还',
             value: dashboard.device_borrowed,
             //icon: LaptopMacIcon,
             color: colors.indigo[500]
         },
         {
-            title: '过期借用设备',
+            title: '过期借用',
             value: dashboard.device_expired,
             //icon: TabletIcon,
             color: colors.red[600]
         },
         {
-            title: '空闲设备',
+            title: '空闲',
             value: (dashboard.device_total - dashboard.device_expired - dashboard.device_borrowed),
             //icon: PhoneIcon,
             color: colors.orange[600]
@@ -99,7 +94,7 @@ function DeviceUsageView(props: {
     return (
         <Card
             className={clsx(classes.root, className)}
-            //{...rest}
+            {...rest}
         >
             <CardHeader title="设备借用情况"/>
             <Divider/>
@@ -138,7 +133,7 @@ function DeviceUsageView(props: {
                             </Typography>
                             <Typography
                                 style={{color}}
-                                variant="h2"
+                                variant="h4"
                             >
                                 {value}
                             </Typography>
@@ -148,59 +143,4 @@ function DeviceUsageView(props: {
             </CardContent>
         </Card>
     );
-};
-
-function DashboardView(props: {
-    dashboard: IDashboard
-}) {
-    const {dashboard} = props;
-
-    const pieDevices = [
-        ["类别", "数量"],
-        ["待归还的设备", dashboard.device_borrowed],
-        ["过期借用设备", dashboard.device_expired],
-        ["空闲设备", (dashboard.device_total - dashboard.device_expired - dashboard.device_borrowed)],
-    ]
-
-
-    return <DeviceUsageView dashboard={dashboard} className={""}/>
-}
-
-export function DashboardPage(props: RouteComponentProps) {
-    const userInfo = useSelector((store: IStore) => store.user.userInfo);
-    const [dashboardData, setDashboardData] = React.useState(null as Optional<IDashboard>);
-    const [errorMessage, setErrorMessage] = React.useState("");
-    const [progress, setProgress] = React.useState(false);
-
-    React.useEffect(() => {
-        if (!userInfo) return;
-        setErrorMessage("");
-        setProgress(true);
-        getDashboard().then((result) => {
-            setProgress(false);
-            if (result.success) {
-                setDashboardData(result.data);
-            } else {
-                setErrorMessage(result.message);
-            }
-        }, reason => {
-            setErrorMessage(reason.toString());
-        })
-    }, [props, userInfo]);
-
-    return <Container maxWidth="lg">
-        {
-            dashboardData ?
-                <DashboardView dashboard={dashboardData}/>
-                : (
-                    errorMessage ?
-                        <Alert severity="error">{errorMessage}</Alert>
-                        : <React.Fragment>
-                            <Skeleton height={200}/>
-                            <Skeleton height={100}/>
-                            <Skeleton height={100}/>
-                        </React.Fragment>
-                )
-        }
-    </Container>
 }
