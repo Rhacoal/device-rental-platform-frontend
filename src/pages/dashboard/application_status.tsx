@@ -35,7 +35,7 @@ export function ApplicationStatus(props: {
         datasets: [
             {
                 data: [dashboard.apply_borrow_pending,
-                    (dashboard.apply_borrow_total - dashboard.apply_borrow_pending)],
+                    (dashboard.apply_borrow_total)],
                 backgroundColor: [
                     colors.indigo[500],
                     colors.red[600],
@@ -80,7 +80,7 @@ export function ApplicationStatus(props: {
         },
         {
             title: '已处理',
-            value: dashboard.apply_borrow_total - dashboard.apply_borrow_pending,
+            value: dashboard.apply_borrow_total,
             color: colors.red[600]
         }
     ];

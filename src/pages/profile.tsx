@@ -76,7 +76,7 @@ export function Profile(props: RouteComponentProps) {
                 <Typography variant="body1">
                     {userInfo.student_id}
                 </Typography>
-                <Button style={{alignSelf: "flex-end"}} onClick={handleLogout}>
+                <Button style={{alignSelf: "flex-end"}} variant="outlined" color="secondary" onClick={handleLogout}>
                     登出
                 </Button>
             </React.Fragment> : <React.Fragment>

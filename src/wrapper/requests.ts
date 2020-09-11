@@ -222,7 +222,7 @@ export const userChangeGroup = async (userId: number, newGroup: UserGroup) =>
  * @param userId 用户 ID
  * @param newGroup 新的用户组名称
  */
-export const userDelete = async (userId: number, newGroup: UserGroup) =>
+export const userDelete = async (userId: number) =>
     await doAuthenticatedRequest("DELETE", Urls.user_edit(userId), null, json => null);
 
 /**

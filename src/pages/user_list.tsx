@@ -25,7 +25,7 @@ import {IUserInfo} from "../wrapper/types";
 import {Link, RouteComponentProps} from 'react-router-dom';
 import {useSelector} from "react-redux";
 import {IStore} from "../store/store";
-import {deviceList, userChangeGroup, userList} from "../wrapper/requests";
+import {deviceList, userChangeGroup, userDelete, userList} from "../wrapper/requests";
 import {Alert} from "@material-ui/lab";
 import {UserGroup, UserGroupName} from "../constants/group";
 import {formatTime} from '../utils/time_format';
@@ -58,6 +58,10 @@ const useRowStyles = makeStyles(theme => createStyles({
     userGroupChange: {
         display: "flex",
         alignItems: "center",
+        justifyContent: "flex-end",
+        "& .MuiButton-root + .MuiButton-root": {
+            marginLeft: theme.spacing(1),
+        },
     }
 }));
 
@@ -171,8 +175,24 @@ function Row(props: { row: IUserInfo }) {
                                                 } else {
                                                     setMessage("设置失败: " + result.message);
                                                 }
+                                            }, reason => {
+                                                setMessage("删除失败: " + reason.toString());
                                             })
                                         }}>修改用户组</Button>
+                                <Button variant="outlined"
+                                        color="secondary"
+                                        onClick={() => {
+                                            setMessage("");
+                                            userDelete(row.user_id).then((result) => {
+                                                if (result.success) {
+                                                    setRefresh(!refresh);
+                                                } else {
+                                                    setMessage("删除失败: " + result.message);
+                                                }
+                                            }, reason => {
+                                                setMessage("删除失败: " + reason.toString());
+                                            });
+                                        }}>删除用户</Button>
                             </div>
                             {message ? <Alert severity="error">{message}</Alert> : null}
                         </Box>
