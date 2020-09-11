@@ -1,4 +1,4 @@
-import React from "react";
+import React, {ReactNode} from "react";
 import {createStyles, makeStyles, useTheme} from "@material-ui/core/styles";
 import {
     IPrivateMessageReceived,
@@ -8,7 +8,7 @@ import {
 } from "../wrapper/types";
 import {useSelector} from "react-redux";
 import {IStore} from "../store/store";
-import {pmSend, pmSendReceiveList} from "../wrapper/requests";
+import {pmMarkRead, pmSend, pmSendReceiveList, updateUnreadCount} from "../wrapper/requests";
 import {
     Avatar,
     Button,
@@ -24,6 +24,8 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import {RouteComponentProps} from "react-router-dom";
 import clsx from "clsx";
+import {Pathname, Search} from "history";
+import {LocalUrls} from "../constants/local_urls";
 
 const textFieldHeight = 150;
 const buttonAreaHeight = 32;
@@ -63,9 +65,10 @@ const useStyles = makeStyles(theme => createStyles({
         "& .MuiTextField-root": {
             height: `calc(100%)`,
         },
-        "& .MuiButtonGroup-root": {
-
-        }
+        "& .MuiInputBase-root": {
+            padding: 0,
+        },
+        "& .MuiButtonGroup-root": {}
     },
     chatBox: {
         boxSizing: "border-box",
@@ -83,12 +86,14 @@ type MessageSelector =
 
 type PMSession = {
     messages: Array<MessageSelector>,
+    unreadCount: number,
 } & ({ fromServer: true } | { fromServer: false, userInfo: IUserInfo });
 
 function newUserSession(userInfo: IUserInfo): PMSession {
     return {
         messages: [],
         fromServer: false,
+        unreadCount: 0,
         userInfo
     }
 }
@@ -99,9 +104,10 @@ interface SortStruct {
     2: PMSession,
 }
 
-function createSessionList(messages: IPrivateMessageSendReceiveList): PMSession[] {
+function createSessionList(messages: IPrivateMessageSendReceiveList, userInfo?: IUserInfo | null): PMSession[] {
     const systemSession: PMSession = {
         messages: [],
+        unreadCount: 0,
         fromServer: true,
     }
     // [最大的未读 ID, 最大的 ID, PMSession]
@@ -118,18 +124,31 @@ function createSessionList(messages: IPrivateMessageSendReceiveList): PMSession[
     for (let receive of messages.receive) {
         if (receive.from_system) {
             systemSession.messages.push({side: "receive", message: receive});
+            if (!receive.read) {
+                systemSession.unreadCount += 1;
+            }
         } else {
             let arr = userSessionMap.get(receive.sender.user_id) || [0, 0, newUserSession(receive.sender)];
             if (!receive.read) {
                 arr[0] = Math.max(arr[0], receive.pm_id);
+                arr[2].unreadCount += 1
             }
             arr[1] = Math.max(arr[1], receive.pm_id);
             arr[2].messages.push({side: "receive", message: receive});
             userSessionMap.set(receive.sender.user_id, arr);
         }
     }
+    if (userInfo) {
+        let arr = userSessionMap.get(userInfo.user_id);
+        if (arr) {
+            arr[0] = 1e51;
+        } else {
+            userSessionMap.set(userInfo.user_id, [1e51, 1e51, newUserSession(userInfo)]);
+        }
+    }
     const list = new Array<SortStruct>();
     userSessionMap.forEach((value) => {
+        value[2].messages.sort((a, b) => a.message.pm_id - b.message.pm_id)
         list.push(value);
     })
     list.push([1e52, 1e52, systemSession])
@@ -146,19 +165,21 @@ const useChatLineStyles = makeStyles(theme => createStyles({
     send: {
         paddingLeft: theme.spacing(2),
         display: "flex",
-        flexDirecton: "row-reverse",
-        alignItems: "top",
+        flexDirection: "row-reverse",
+        alignItems: "flex-start",
         "& .MuiAvatar-root": {
             margin: theme.spacing(1, 1),
+            backgroundColor: theme.palette.primary.main,
         },
     },
     receive: {
         paddingRight: theme.spacing(2),
         display: "flex",
-        flexDirecton: "row",
-        alignItems: "top",
+        flexDirection: "row",
+        alignItems: "flex-start",
         "& .MuiAvatar-root": {
             margin: theme.spacing(1, 1),
+            backgroundColor: theme.palette.secondary.main,
         },
     },
     paper: {
@@ -170,20 +191,30 @@ const useChatLineStyles = makeStyles(theme => createStyles({
     }
 }));
 
+function RenderStringWithLn(props: {
+    value: string,
+}) {
+    const lines = props.value.split("\n");
+    return <React.Fragment>
+        {lines.map((value, index) => <p style={{margin: 0}} key={index}>{value}</p>)}
+    </React.Fragment>
+}
+
 function ChatLine(props: {
-    message: MessageSelector
+    message: MessageSelector,
+    userName: string,
 }) {
     const classes = useChatLineStyles(useTheme());
     if (props.message.side === "receive") {
         return <ListItem className={classes.receive}>
-            <Avatar>{props.message.message.from_system ? " " : props.message.message.sender.name.substring(0, 1)}</Avatar>
+            <Avatar>{props.message.message.from_system ? "系" : props.message.message.sender.name.substring(0, 1)}</Avatar>
             <Paper className={classes.paper}>
-                {props.message.message.message}
+                <RenderStringWithLn value={props.message.message.message}/>
             </Paper>
         </ListItem>
     } else {
         return <ListItem className={classes.send}>
-            <Avatar>{props.message.message.receiver.name.substring(0, 1)}</Avatar>
+            <Avatar>{props.userName.substring(0, 1)}</Avatar>
             <Paper className={classes.paper}>
                 {props.message.message.message}
             </Paper>
@@ -191,46 +222,84 @@ function ChatLine(props: {
     }
 }
 
-export function PMListPage(props: RouteComponentProps) {
+export function PMListPage(props: RouteComponentProps<any, any, {
+    userInfo?: IUserInfo | null,
+}>) {
     const classes = useStyles(useTheme());
     const [sessionList, setSessionList] = React.useState([] as PMSession[])
     const [errorMessage, setErrorMessage] = React.useState(null as (string | null));
     const [page, setPage] = React.useState(0);
     const [refresh, setRefresh] = React.useState(false);
+    const [redraw, setRedraw] = React.useState(false);
     const userInfo = useSelector((store: IStore) => store.user.userInfo);
     const [currentSession, setCurrentSession] = React.useState(null as (PMSession | null));
     const [chatMessage, setChatMessage] = React.useState("");
+    const [loading, setLoading] = React.useState(false);
+    const divRef = React.useRef<HTMLDivElement>();
 
-    const canReply = currentSession === null || currentSession.fromServer;
+    const canReply = !(currentSession === null || currentSession.fromServer);
+    let withUserInfo = props.location?.state?.userInfo;
+    if (withUserInfo?.user_id === userInfo?.user_id) {
+        withUserInfo = null;
+    }
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
 
+    const handleScrollToBottom = (isSmooth: boolean) => {
+        if (divRef.current) {
+            divRef.current.scrollIntoView(isSmooth ? { behavior: "smooth" } : undefined);
+        }
+    }
+
     React.useEffect(() => {
-        if (!userInfo) return;
+        if (!userInfo && loading) return;
+        setLoading(true);
         setErrorMessage(null);
         pmSendReceiveList().then((result) => {
+            setLoading(false);
             if (result.success) {
                 setErrorMessage(null);
-                const newSessionList = createSessionList(result.data);
+                const newSessionList = createSessionList(result.data, withUserInfo);
                 setSessionList(newSessionList);
-                setCurrentSession(newSessionList[0] || null);
+                if (withUserInfo && newSessionList.length >= 2) {
+                    setCurrentSession(newSessionList[1]);
+                } else {
+                    setCurrentSession(newSessionList[0] || null);
+                }
             } else {
                 setErrorMessage(result.message);
             }
         }, reason => {
+            setLoading(false);
             setErrorMessage(reason.toString());
         })
-    }, [refresh, userInfo]);
+    }, [refresh, userInfo, withUserInfo]);
+
+    React.useEffect(() => {
+        if (currentSession) {
+            handleScrollToBottom(true);
+            pmMarkRead(currentSession.messages.map(value => value.message.pm_id)).then((result) => {
+                updateUnreadCount();
+            });
+            currentSession.unreadCount = 0;
+            setRedraw(!redraw);
+        }
+    }, [currentSession]);
 
     const triggerRefresh = () => {
         setRefresh(!refresh);
     }
 
-    const sendMessage = (receiverId: number) => {
-        pmSend(receiverId, chatMessage, PMNormal).then(() => {
+    const sendMessage = (receiver: IUserInfo) => {
+        pmSend(receiver.user_id, chatMessage, PMNormal).then(() => {
+            setChatMessage("");
             triggerRefresh();
+            props.history.push({
+                pathname: LocalUrls.pm,
+                state: {userInfo: receiver},
+            });
         })
     }
 
@@ -246,7 +315,9 @@ export function PMListPage(props: RouteComponentProps) {
                                     setCurrentSession(session);
                                     setChatMessage("");
                                 }} key={index} className={clsx(currentSession === session && classes.selected)}>
-                                    <ListItemText primary={session.fromServer ? "系统消息" : session.userInfo.name}
+                                    <ListItemText primary={<span style={{display: "flex", justifyContent: "space-between"}}>
+                                        <span>{(session.fromServer ? "系统消息" : session.userInfo.name)}</span>
+                                        <span style={{color: "#777"}}>{session.unreadCount === 0 ? "" : `(${session.unreadCount})`}</span></span>}
                                                   secondary={<Typography variant="body2" color="textSecondary" style={{
                                                       overflow: "hidden",
                                                       textOverflow: "ellipsis",
@@ -267,20 +338,22 @@ export function PMListPage(props: RouteComponentProps) {
                     <List className={classes.chatHistoryArea}>
                         {
                             currentSession ? currentSession.messages.map((message, index) =>
-                                    <ChatLine message={message} key={index}/>) :
+                                    <ChatLine message={message} key={index} userName={userInfo?.name || ""}/>) :
                                 <div style={{textAlign: "center"}}>请选择一个会话</div>
                         }
+                        <div style={{height: "0"}} ref={ref => {if (ref) divRef.current = ref;}} />
                     </List>
                     <div className={classes.chatBoxArea}>
                         <TextField fullWidth
                                    multiline
                                    value={chatMessage}
-                                   disabled={canReply}
+                                   disabled={!canReply}
                                    placeholder={"回复"}
                                    inputProps={{
                                        style: {
                                            height: textFieldHeight,
-                                           padding: '0 14px',
+                                           padding: '8px 14px',
+                                           boxSizing: "border-box",
                                        },
                                    }}
                                    onChange={(event) => {
@@ -288,7 +361,9 @@ export function PMListPage(props: RouteComponentProps) {
                                    }}
                         />
                         <ButtonGroup>
-                            <Button disabled={canReply} variant={canReply ? "outlined" : "contained"}>
+                            <Button disabled={!canReply} variant={"outlined"}
+                                    color={canReply ? "primary" : "default"}
+                                    onClick={!currentSession?.fromServer && currentSession?.userInfo ? () => sendMessage(currentSession.userInfo) : undefined}>
                                 发送
                             </Button>
                         </ButtonGroup>

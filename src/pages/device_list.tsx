@@ -1,5 +1,5 @@
 import React from "react";
-import {RouteComponentProps} from "react-router-dom";
+import {Link, RouteComponentProps} from "react-router-dom";
 import {createStyles, makeStyles, useTheme} from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -43,6 +43,7 @@ import {useSelector} from "react-redux";
 import {IStore} from "../store/store";
 import clsx from "clsx";
 import {toShortTimeString} from "../utils/time_format";
+import {LocalUrls} from "../constants/local_urls";
 
 const useStyles = makeStyles(theme => createStyles({
     paper: {
@@ -134,10 +135,24 @@ function DeviceRow(props: { row: IDevice, collapse: React.ReactNode }) {
                     {row.name}
                 </TableCell>
                 <TableCell>
-                    {row.owner.name}
+                    <Button component={Link} to={{
+                        pathname: LocalUrls.pm,
+                        state: {
+                            userInfo: row.owner,
+                        }
+                    }}>
+                        {row.owner.name}
+                    </Button>
                 </TableCell>
                 <TableCell>
-                    {row.borrower ? row.borrower.name : ""}
+                    <Button component={Link} to={row.borrower ? {
+                        pathname: LocalUrls.pm,
+                        state: {
+                            userInfo: row.borrower,
+                        }
+                    } : ""}>
+                        {row.borrower ? row.borrower.name : ""}
+                    </Button>
                 </TableCell>
                 <TableCell>
                     {row.return_time ? toShortTimeString(row.return_time) : ""}

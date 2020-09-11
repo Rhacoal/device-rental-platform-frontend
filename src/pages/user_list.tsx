@@ -22,13 +22,14 @@ import {
     Typography
 } from "@material-ui/core";
 import {IUserInfo} from "../wrapper/types";
-import {RouteComponentProps} from 'react-router-dom';
+import {Link, RouteComponentProps} from 'react-router-dom';
 import {useSelector} from "react-redux";
 import {IStore} from "../store/store";
 import {deviceList, userChangeGroup, userList} from "../wrapper/requests";
 import {Alert} from "@material-ui/lab";
 import {UserGroup, UserGroupName} from "../constants/group";
 import {formatTime} from '../utils/time_format';
+import {LocalUrls} from "../constants/local_urls";
 
 const useStyles = makeStyles({
     root: {
@@ -119,7 +120,14 @@ function Row(props: { row: IUserInfo }) {
                     const value = row[column.id];
                     return (
                         <TableCell key={column.id} align={column.align}>
-                            {column.format ? column.format(value.toString()) : value}
+                            {column.id === 'name' ? <Button component={Link} to={{
+                                pathname: LocalUrls.pm,
+                                state: {
+                                    userInfo: row,
+                                }
+                            }}>
+                                {row[column.id]}
+                            </Button> : (column.format ? column.format(value.toString()) : value)}
                         </TableCell>
                     );
                 })}

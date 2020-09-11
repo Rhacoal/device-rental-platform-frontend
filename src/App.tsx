@@ -269,7 +269,7 @@ function App() {
     React.useEffect(() => {
         const interval = setInterval(() => {
             updateUnreadCount();
-        }, 20 * 1000);
+        }, 5 * 1000);
         return () => {
             clearInterval(interval);
         }

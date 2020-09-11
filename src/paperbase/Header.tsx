@@ -20,6 +20,7 @@ import {LocalUrls} from "../constants/local_urls";
 import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {IStore} from "../store/store";
+import clsx from "clsx";
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -41,6 +42,9 @@ const styles = (theme: Theme) =>
         button: {
             borderColor: lightColor,
         },
+        hasNotification: {
+            color: "#ff0"
+        }
     });
 
 interface HeaderProps extends WithStyles<typeof styles> {
@@ -50,6 +54,14 @@ interface HeaderProps extends WithStyles<typeof styles> {
 function Header(props: HeaderProps) {
     const {classes, onDrawerToggle} = props;
     const pmCount = useSelector((store: IStore) => store.pmCount);
+    const [shakePosition, setShakePosition] = React.useState(0);
+
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            setShakePosition(shakePosition + 1);
+        }, 32);
+        return () => clearInterval(interval);
+    })
 
     return (
         <React.Fragment>
@@ -74,10 +86,13 @@ function Header(props: HeaderProps) {
                         {/*    /!*  Go to docs*!/*/}
                         {/*    /!*</Link>*!/*/}
                         {/*</Grid>*/}
-                        <Grid item>
+                        <Grid item className={clsx(pmCount > 0 && classes.hasNotification)}>
                             <Tooltip title={pmCount > 0 ? `${pmCount} 条未读消息` : "无未读消息"}>
-                                <IconButton color={pmCount > 0 ? "secondary" : "inherit"} component={Link}
-                                            to={LocalUrls.pm}>
+                                <IconButton color="inherit" component={Link}
+                                            to={LocalUrls.pm} style={{
+                                    position: "relative",
+                                    left: pmCount > 0 ? (((shakePosition % 2) - 0.5) * Math.sin(shakePosition / 8) * 4) : 0,
+                                }}>
                                     {
                                         pmCount > 0 ? <NotificationsActiveIcon/> : <NotificationsIcon/>
                                     }
