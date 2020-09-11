@@ -28,6 +28,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import {Alert, Pagination} from "@material-ui/lab";
 import {formatTime} from "../utils/time_format";
 import {MaxCommentsPerPage} from "../constants/constants";
+import {DeviceDescription, DeviceDescriptionSplitter} from "../utils/device_description_renderer";
 
 const useStyles = makeStyles(theme => createStyles({
     margin1: {
@@ -181,7 +182,9 @@ export function DeviceDetailSubPage(props: {
     const [date, setDate] = React.useState(new Date() as Date | null);
     const [editMode, setEditMode] = React.useState(false);
     const [newTitle, setNewTitle] = React.useState(props.deviceDetail.name);
-    const [newContent, setNewContent] = React.useState(props.deviceDetail.description);
+    const {address, description} = DeviceDescriptionSplitter(props.deviceDetail.description);
+    const [newAddress, setNewAddress] = React.useState(address);
+    const [newContent, setNewContent] = React.useState(description);
 
     const handleSubmit = () => {
         if (submitting || succeeded || date === null) {
@@ -207,7 +210,8 @@ export function DeviceDetailSubPage(props: {
         if (!editMode) {
             setEditMode(true);
             setNewTitle(props.deviceDetail.name);
-            setNewContent(props.deviceDetail.description);
+            setNewAddress(address);
+            setNewContent(description);
         }
     }
 
@@ -220,12 +224,13 @@ export function DeviceDetailSubPage(props: {
             return;
         }
         setSubmitting2(true);
-        deviceEdit(props.deviceDetail.device_id, newTitle, newContent).then((result) => {
+        const content1 = `<address:${newAddress}>${newContent}`;
+        deviceEdit(props.deviceDetail.device_id, newTitle, content1).then((result) => {
             if (result.success) {
                 setSucceeded2(true);
                 setSubmitting2(false);
                 props.deviceDetail.name = newTitle;
-                props.deviceDetail.description = newContent;
+                props.deviceDetail.description = content1;
                 cancelEditMode();
             } else {
                 setSucceeded2(false);
@@ -379,18 +384,31 @@ export function DeviceDetailSubPage(props: {
             由 {props.deviceDetail.owner.name} 提供
         </Typography>
         {editMode ?
-            <TextField fullWidth
-                       value={newContent}
-                       multiline
-                       variant="filled"
-                       rows={10}
-                       label="设备详情"
-                       onChange={(evt) => {
-                           setNewContent(evt.target.value);
-                       }}
-            />
+            <React.Fragment>
+                <TextField fullWidth
+                           label="地址"
+                           variant="filled"
+                           value={newAddress}
+                           onChange={(evt) => {
+                               setNewAddress(evt.target.value);
+                           }}
+                />
+                <TextField fullWidth
+                           value={newContent}
+                           multiline
+                           variant="filled"
+                           rows={10}
+                           label="设备详情"
+                           onChange={(evt) => {
+                               setNewContent(evt.target.value);
+                           }}
+                           style={{
+                               marginTop: 8,
+                           }}
+                />
+            </React.Fragment>
             : <Typography variant="body1">
-                {props.deviceDetail.description}
+                <DeviceDescription value={props.deviceDetail.description}/>
             </Typography>
         }
         <Button fullWidth

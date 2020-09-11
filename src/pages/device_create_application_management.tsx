@@ -21,6 +21,7 @@ import {Alert} from "@material-ui/lab";
 import {KeyValueView} from "./user_list";
 import {Urls} from "../wrapper/urls";
 import {VerticalSpacer} from "../components/vertical_spacer";
+import {DeviceDescription} from "../utils/device_description_renderer";
 
 const deviceCreateApplicationProps = {
     apiRoot: applyCreateDeviceAPIs,
@@ -43,7 +44,7 @@ const deviceCreateApplicationProps = {
                               value={value.handler.email}/>
                 <KeyValueView keyString={"处理者备注"}
                               value={value.handle_reason || "无"}/>
-                <VerticalSpacer />
+                <VerticalSpacer/>
             </React.Fragment> : null}
             <KeyValueView keyString={"申请人"}
                           value={value.applicant.name}/>
@@ -51,10 +52,11 @@ const deviceCreateApplicationProps = {
                           value={value.applicant.student_id}/>
             <KeyValueView keyString={"邮箱"}
                           value={value.applicant.email}/>
-            <VerticalSpacer />
+            <VerticalSpacer/>
             <KeyValueView keyString={"设备名称"}
                           value={value.device_name}/>
-            <KeyValueView keyString={"设备信息"} value={value.device_description}/>
+            <KeyValueView keyString={"设备信息"} value={""}/>
+            <DeviceDescription value={value.device_description}/>
         </React.Fragment>
     },
     titleRenderer: (value: ICreateDeviceApplication) => {
@@ -102,6 +104,7 @@ export function DeviceCreateApplicationProviderPage(props: RouteComponentProps) 
     const classes = useStyles(useTheme());
     const [open, setOpen] = React.useState(false);
     const [deviceName, setDeviceName] = React.useState("");
+    const [deviceAddress, setDeviceAddress] = React.useState("");
     const [deviceDescription, setDeviceDescription] = React.useState("");
     const [refresh, setRefresh] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState("");
@@ -114,7 +117,8 @@ export function DeviceCreateApplicationProviderPage(props: RouteComponentProps) 
         }
         setInSubmit(true);
         setErrorMessage("");
-        applyCreateDevice(deviceName, deviceDescription).then((result) => {
+        applyCreateDevice(deviceName, `<address:${deviceAddress}>${deviceDescription}`)
+            .then((result) => {
             setInSubmit(false);
             if (result.success) {
                 setRefresh(!refresh);
@@ -154,6 +158,12 @@ export function DeviceCreateApplicationProviderPage(props: RouteComponentProps) 
                                variant="outlined"
                                onChange={(event) => {
                                    setDeviceName(event.target.value);
+                               }}
+                    />
+                    <TextField label="地址"
+                               variant="outlined"
+                               onChange={(event) => {
+                                   setDeviceAddress(event.target.value);
                                }}
                     />
                     <TextField multiline
