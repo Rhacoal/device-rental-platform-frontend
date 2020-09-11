@@ -249,7 +249,7 @@ export function PMListPage(props: RouteComponentProps<any, any, {
 
     const handleScrollToBottom = (isSmooth: boolean) => {
         if (divRef.current) {
-            divRef.current.scrollIntoView(isSmooth ? { behavior: "smooth" } : undefined);
+            divRef.current.scrollIntoView(isSmooth ? {behavior: "smooth"} : undefined);
         }
     }
 
@@ -315,15 +315,18 @@ export function PMListPage(props: RouteComponentProps<any, any, {
                                     setCurrentSession(session);
                                     setChatMessage("");
                                 }} key={index} className={clsx(currentSession === session && classes.selected)}>
-                                    <ListItemText primary={<span style={{display: "flex", justifyContent: "space-between"}}>
+                                    <ListItemText
+                                        primary={<span style={{display: "flex", justifyContent: "space-between"}}>
                                         <span>{(session.fromServer ? "系统消息" : session.userInfo.name)}</span>
-                                        <span style={{color: "#777"}}>{session.unreadCount === 0 ? "" : `(${session.unreadCount})`}</span></span>}
-                                                  secondary={<Typography variant="body2" color="textSecondary" style={{
-                                                      overflow: "hidden",
-                                                      textOverflow: "ellipsis",
-                                                      whiteSpace: "nowrap",
-                                                      fontSize: "0.875em",
-                                                  }}>{session.messages.length > 0 ? session.messages[0].message.message : "暂无消息"}</Typography>}/>
+                                        <span
+                                            style={{color: "#777"}}>{session.unreadCount === 0 ? "" : `(${session.unreadCount})`}</span></span>}
+                                        secondary={<Typography variant="body2" color="textSecondary" style={{
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            whiteSpace: "nowrap",
+                                            fontSize: "0.875em",
+                                        }}>{session.messages.length > 0 ?
+                                            session.messages[session.messages.length - 1].message.message : "暂无消息"}</Typography>}/>
                                 </ListItem>
                             )
                         }
@@ -341,7 +344,9 @@ export function PMListPage(props: RouteComponentProps<any, any, {
                                     <ChatLine message={message} key={index} userName={userInfo?.name || ""}/>) :
                                 <div style={{textAlign: "center"}}>请选择一个会话</div>
                         }
-                        <div style={{height: "0"}} ref={ref => {if (ref) divRef.current = ref;}} />
+                        <div style={{height: "0"}} ref={ref => {
+                            if (ref) divRef.current = ref;
+                        }}/>
                     </List>
                     <div className={classes.chatBoxArea}>
                         <TextField fullWidth
