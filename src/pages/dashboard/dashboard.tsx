@@ -20,6 +20,8 @@ import {DeviceUsageView} from "./device_usage";
 import {ApplicationStatus} from "./application_status";
 import {BorrowThisMonth} from "./borrow_this_month";
 import {makeStyles} from "@material-ui/core/styles";
+import {UserCount} from "./user_count";
+import {formatTime} from "../../utils/time_format";
 
 function DashboardView(props: {
     dashboard: IDashboard
@@ -29,15 +31,18 @@ function DashboardView(props: {
     return (
         <React.Fragment>
             <Grid container spacing={3}>
-                <Grid item lg={4} md={6} xl={3} xs={12}>
+                <Grid item lg={4} md={6} xs={12}>
                     <DeviceUsageView dashboard={dashboard} className={""}/>
                 </Grid>
-                <Grid item lg={4} md={6} xl={3} xs={12}>
+                <Grid item lg={4} md={6} xs={12}>
                     <ApplicationStatus dashboard={dashboard} className={""}/>
                 </Grid>
-                <Grid item lg={4} md={12} xl={4} xs={12} container spacing={3}>
-                    <Grid item xs={12}>
-                        <BorrowThisMonth dashboard={dashboard} className={""} style={{height: "min-content"}}/>
+                <Grid item lg={4} md={12} xs={12} container>
+                    <Grid item xs={12} style={{height: "min-content"}}>
+                        <BorrowThisMonth dashboard={dashboard} className={""}/>
+                    </Grid>
+                    <Grid item xs={12} style={{marginTop: 24}}>
+                        <UserCount dashboard={dashboard} className={""} />
                     </Grid>
                 </Grid>
             </Grid>
@@ -67,7 +72,11 @@ export function DashboardPage(props: RouteComponentProps) {
         })
     }, [props, userInfo]);
 
-    return <Container maxWidth="lg">
+    return <Container maxWidth={false}>
+        <div style={{marginBottom: 16}}>
+            <Typography variant="h4" component="h1">统计数据</Typography>
+            <Typography variant="body1" color="textSecondary">{`截至 ${formatTime(new Date().getTime() / 1000)}`}</Typography>
+        </div>
         {
             dashboardData ?
                 <DashboardView dashboard={dashboardData}/>

@@ -162,7 +162,7 @@ const styles = makeStyles(createStyles({
     },
     main: {
         flex: 1,
-        padding: theme.spacing(4, 2),
+        padding: theme.spacing(4, 0),
         background: '#eaeff1',
     },
     footer: {
