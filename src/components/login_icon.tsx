@@ -7,14 +7,14 @@ const useStyles = makeStyles(theme => createStyles({
     avatar: {
         margin: theme.spacing(1),
         backgroundColor: colors.blue[100],
-        width: theme.spacing(8),
-        height: theme.spacing(8),
+        width: 64,
+        height: 64,
     },
 }));
 
 export function LoginIcon() {
     const classes = useStyles(useTheme());
     return <Avatar className={classes.avatar}>
-        <img src="mira256.png" alt={"ミラ"}/>
+        <img src="mira256.png" alt={"ミラ"} width="64" height="64"/>
     </Avatar>
 }
