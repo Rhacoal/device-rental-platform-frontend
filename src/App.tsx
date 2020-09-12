@@ -244,6 +244,7 @@ function DrawerWrapper(props: RouteComponentProps & { mobileOpen: boolean, handl
                 PaperProps={{style: {width: drawerWidth}}}
                 variant="temporary"
                 open={props.mobileOpen}
+                onClick={props.handleDrawerToggle}
                 onClose={props.handleDrawerToggle}
                 currentPath={props.location.pathname}
                 isLoggedIn={user !== null}

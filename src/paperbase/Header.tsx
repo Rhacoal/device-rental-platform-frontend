@@ -81,20 +81,15 @@ function Header(props: HeaderProps) {
                             </Grid>
                         </Hidden>
                         <Grid item xs/>
-                        {/*<Grid item>*/}
-                        {/*    /!*<Link className={classes.link} href="#" variant="body2">*!/*/}
-                        {/*    /!*  Go to docs*!/*/}
-                        {/*    /!*</Link>*!/*/}
-                        {/*</Grid>*/}
                         <Grid item className={clsx(pmCount > 0 && classes.hasNotification)}>
                             <Tooltip title={pmCount > 0 ? `${pmCount} 条未读消息` : "无未读消息"}>
                                 <IconButton color="inherit" component={Link}
-                                            to={LocalUrls.pm} style={{
-                                    position: "relative",
-                                    left: pmCount > 0 ? (((shakePosition % 2) - 0.5) * Math.sin(shakePosition / 8) * 4) : 0,
-                                }}>
+                                            to={LocalUrls.pm}>
                                     {
-                                        pmCount > 0 ? <NotificationsActiveIcon/> : <NotificationsIcon/>
+                                        pmCount > 0 ? <NotificationsActiveIcon style={{
+                                            position: "relative",
+                                            left: pmCount > 0 ? (((shakePosition % 2) - 0.5) * Math.sin(shakePosition / 8) * 4) : 0,
+                                        }}/> : <NotificationsIcon/>
                                     }
                                 </IconButton>
                             </Tooltip>
@@ -105,49 +100,6 @@ function Header(props: HeaderProps) {
                     </Grid>
                 </Toolbar>
             </AppBar>
-            {/*<AppBar*/}
-            {/*  component="div"*/}
-            {/*  className={classes.secondaryBar}*/}
-            {/*  color="primary"*/}
-            {/*  position="static"*/}
-            {/*  elevation={0}*/}
-            {/*>*/}
-            {/*  <Toolbar>*/}
-            {/*    <Grid container alignItems="center" spacing={1}>*/}
-            {/*      <Grid item xs>*/}
-            {/*        <Typography color="inherit" variant="h5" component="h1">*/}
-            {/*          Authentication*/}
-            {/*        </Typography>*/}
-            {/*      </Grid>*/}
-            {/*      <Grid item>*/}
-            {/*        <Button className={classes.button} variant="outlined" color="inherit" size="small">*/}
-            {/*          Web setup*/}
-            {/*        </Button>*/}
-            {/*      </Grid>*/}
-            {/*      <Grid item>*/}
-            {/*        <Tooltip title="Help">*/}
-            {/*          <IconButton color="inherit">*/}
-            {/*            <HelpIcon />*/}
-            {/*          </IconButton>*/}
-            {/*        </Tooltip>*/}
-            {/*      </Grid>*/}
-            {/*    </Grid>*/}
-            {/*  </Toolbar>*/}
-            {/*</AppBar>*/}
-            {/*<AppBar*/}
-            {/*  component="div"*/}
-            {/*  className={classes.secondaryBar}*/}
-            {/*  color="primary"*/}
-            {/*  position="static"*/}
-            {/*  elevation={0}*/}
-            {/*>*/}
-            {/*  <Tabs value={0} textColor="inherit">*/}
-            {/*    <Tab textColor="inherit" label="Users" />*/}
-            {/*    <Tab textColor="inherit" label="Sign-in method" />*/}
-            {/*    <Tab textColor="inherit" label="Templates" />*/}
-            {/*    <Tab textColor="inherit" label="Usage" />*/}
-            {/*  </Tabs>*/}
-            {/*</AppBar>*/}
         </React.Fragment>
     );
 }

@@ -4,13 +4,15 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import {RouteComponentProps} from "react-router-dom";
 import {ApplicationViewPage} from "./application_admin";
+import BusinessIcon from "@material-ui/icons/Business";
+import DnsIcon from '@material-ui/icons/Dns';
 import {
     Box,
     Button,
     ButtonGroup,
     Collapse,
     Container,
-    createStyles, Divider,
+    createStyles, Divider, InputAdornment,
     Paper, Snackbar,
     TextField,
     useTheme
@@ -153,13 +155,27 @@ export function DeviceCreateApplicationProviderPage(props: RouteComponentProps) 
             </div>
             <Collapse in={open}>
                 <Paper className={classes.paper}>
-                    <TextField label="设备名称"
+                    <TextField placeholder="设备名称"
+                               InputProps={{
+                                   startAdornment: (
+                                       <InputAdornment position="start">
+                                           <DnsIcon />
+                                       </InputAdornment>
+                                   ),
+                               }}
                                variant="outlined"
                                onChange={(event) => {
                                    setDeviceName(event.target.value);
                                }}
                     />
-                    <TextField label={MetaKeyDescription.address}
+                    <TextField placeholder={MetaKeyDescription.address}
+                               InputProps={{
+                                   startAdornment: (
+                                       <InputAdornment position="start">
+                                           <BusinessIcon />
+                                       </InputAdornment>
+                                   ),
+                               }}
                                variant="outlined"
                                onChange={(event) => {
                                    setDeviceAddress(event.target.value);

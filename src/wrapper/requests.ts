@@ -326,9 +326,9 @@ export const commentDelete = async (deviceId: number, commentId: number) =>
  */
 
 export interface ApplicationAPISet<T extends IApplication> {
-    "approve": (applyId: number, reason: string) => Promise<Result<null>>,
-    "reject": (applyId: number, reason: string) => Promise<Result<null>>,
-    "cancel": (applyId: number, reason: string) => Promise<Result<null>>,
+    "approve": (applyId: number, handle_reason: string) => Promise<Result<null>>,
+    "reject": (applyId: number, handle_reason: string) => Promise<Result<null>>,
+    "cancel": (applyId: number, handle_reason: string) => Promise<Result<null>>,
     "self": () => Promise<Result<T[]>>,
     "provider": () => Promise<Result<T[]>>,
     "admin": () => Promise<Result<T[]>>,
@@ -340,12 +340,12 @@ export interface ApplicationAPISet<T extends IApplication> {
  */
 function createApplicationFunctions<T extends IApplication>(urlBase: ApplicationUrl): ApplicationAPISet<T> {
     return {
-        "approve": async (applyId: number, reason: string) =>
-            await doAuthenticatedRequest("POST", urlBase.approveApplication(applyId), {reason}, json => null),
-        "reject": async (applyId: number, reason: string) =>
-            await doAuthenticatedRequest("POST", urlBase.rejectApplication(applyId), {reason}, json => null),
-        "cancel": async (applyId: number, reason: string) =>
-            await doAuthenticatedRequest("POST", urlBase.cancelApplication(applyId), {reason}, json => null),
+        "approve": async (applyId: number, handle_reason: string) =>
+            await doAuthenticatedRequest("POST", urlBase.approveApplication(applyId), {handle_reason}, json => null),
+        "reject": async (applyId: number, handle_reason: string) =>
+            await doAuthenticatedRequest("POST", urlBase.rejectApplication(applyId), {handle_reason}, json => null),
+        "cancel": async (applyId: number, handle_reason: string) =>
+            await doAuthenticatedRequest("POST", urlBase.cancelApplication(applyId), {handle_reason}, json => null),
         "self": async () =>
             await doAuthenticatedRequest("GET", urlBase.baseUrl, null, json => json.applications as T[]),
         "provider": async () =>
