@@ -11,7 +11,7 @@ export function Copyright() {
             {'.   '}
             <GitHub fontSize="small"/>
             <Link color="inherit" href="https://github.com/leonardodalinky/device-rental-platform-backend">
-                Github Repo
+                Github
             </Link>
         </Typography>
     );

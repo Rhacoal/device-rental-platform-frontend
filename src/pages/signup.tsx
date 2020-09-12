@@ -19,6 +19,7 @@ import {Alert, AlertTitle} from "@material-ui/lab";
 import {Simulate} from "react-dom/test-utils";
 import {useSelector} from "react-redux";
 import {Optional} from "../wrapper/types";
+import {LoginIcon} from "../components/login_icon";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -137,11 +138,9 @@ export default function SignUp(props: RouteComponentProps) {
         <Container component="main" maxWidth="xs" className={classes.root}>
             <CssBaseline/>
             <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon/>
-                </Avatar>
+                <LoginIcon/>
                 <Typography component="h1" variant="h5">
-                    注册
+                    注册{isTraditional ? " (Legacy)" : ""}
                 </Typography>
                 {
                     page === 1 ?

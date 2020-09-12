@@ -1,3 +1,3 @@
 export const Strings = {
-    "app_name": "设备管理平台",
+    "app_name": "DRP 设备租借平台",
 }

@@ -133,18 +133,6 @@ function Navigator(props: NavigatorProps) {
                 <ListItem className={clsx(classes.firebase, classes.item, classes.itemCategory)}>
                     {Strings.app_name}
                 </ListItem>
-                {/*<ListItem className={clsx(classes.item, classes.itemCategory)}>*/}
-                {/*  <ListItemIcon className={classes.itemIcon}>*/}
-                {/*    <HomeIcon />*/}
-                {/*  </ListItemIcon>*/}
-                {/*  <ListItemText*/}
-                {/*    classes={{*/}
-                {/*      primary: classes.itemPrimary,*/}
-                {/*    }}*/}
-                {/*  >*/}
-                {/*    Project Overview*/}
-                {/*  </ListItemText>*/}
-                {/*</ListItem>*/}
                 {(isLoggedIn ? categories.filter((value) => {
                     if (userGroup) {
                         return value.permission.indexOf(userGroup) !== -1;

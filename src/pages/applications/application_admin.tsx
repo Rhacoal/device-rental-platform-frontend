@@ -1,5 +1,5 @@
 import React, {PropsWithChildren} from "react";
-import {IApplication, IDeviceBorrowApplication, Optional} from "../../wrapper/types";
+import {IApplication, Optional} from "../../wrapper/types";
 import {
     Button,
     ButtonGroup,
@@ -9,7 +9,6 @@ import {
     IconButton,
     List,
     ListItem,
-    ListItemText,
     Typography,
     useTheme
 } from "@material-ui/core";

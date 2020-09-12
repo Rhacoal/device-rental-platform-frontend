@@ -20,6 +20,8 @@ import {IStore, UserInfoSlice} from "../store/store";
 import {login, register} from "../wrapper/requests";
 import {Alert} from "@material-ui/lab";
 import {Optional} from "../wrapper/types";
+import {LoginIcon} from "../components/login_icon";
+import {colors} from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -28,10 +30,6 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -84,9 +82,7 @@ export default function SignIn() {
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
             <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon/>
-                </Avatar>
+                <LoginIcon />
                 <Typography component="h1" variant="h5">
                     登录
                 </Typography>
