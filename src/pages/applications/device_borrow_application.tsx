@@ -7,6 +7,7 @@ import {ApplicationViewPage} from "./application_admin";
 import {KeyValueView} from "../user_list";
 import {VerticalSpacer} from "../../components/vertical_spacer";
 import {formatTime} from "../../utils/time_format";
+import {UserNameLink} from "../../components/user_name_link";
 
 const deviceBorrowApplicationPageProps = {
     apiRoot: applyBorrowDeviceAPIs,
@@ -24,7 +25,7 @@ const deviceBorrowApplicationPageProps = {
         return <React.Fragment>
             {value.handler ? <React.Fragment>
                 <KeyValueView keyString={"处理人"}
-                              value={value.handler.name}/>
+                              value={<UserNameLink userInfo={value.handler}/>}/>
                 <KeyValueView keyString={"邮箱"}
                               value={value.handler.email}/>
                 <KeyValueView keyString={"处理者备注"}
@@ -34,7 +35,7 @@ const deviceBorrowApplicationPageProps = {
             <KeyValueView keyString={"申请原因"}
                           value={value.reason}/>
             <KeyValueView keyString={"申请人"}
-                          value={value.applicant.name}/>
+                          value={<UserNameLink userInfo={value.applicant}/>}/>
             <KeyValueView keyString={"学号"}
                           value={value.applicant.student_id}/>
             <KeyValueView keyString={"邮箱"}
@@ -42,7 +43,7 @@ const deviceBorrowApplicationPageProps = {
             <KeyValueView keyString={"归还时间"}
                           value={formatTime(value.return_time)}/>
             <VerticalSpacer />
-            <KeyValueView keyString={"设备提供者"} value={value.device.owner.name}/>
+            <KeyValueView keyString={"设备提供者"} value={<UserNameLink userInfo={value.device.owner}/>}/>
             <KeyValueView keyString={"设备信息"} value={value.device.description}/>
 
         </React.Fragment>

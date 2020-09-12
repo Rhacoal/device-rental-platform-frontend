@@ -358,17 +358,17 @@ export function DeviceDetailSubPage(props: {
                         onClick={() => setApplyOpen(!applyOpen)}>
                     申请借用
                 </Button>
-                <Button variant={"outlined"}
-                        color="primary"
-                        component={Link}
-                        to={{
-                            pathname: LocalUrls.pm,
-                            state: {
-                                userInfo: props.deviceDetail.owner,
-                            },
-                        }}>
-                    联系提供者
-                </Button>
+                {/*<Button variant={"outlined"}*/}
+                {/*        color="primary"*/}
+                {/*        component={Link}*/}
+                {/*        to={{*/}
+                {/*            pathname: LocalUrls.pm,*/}
+                {/*            state: {*/}
+                {/*                userInfo: props.deviceDetail.owner,*/}
+                {/*            },*/}
+                {/*        }}>*/}
+                {/*    联系提供者*/}
+                {/*</Button>*/}
             </ButtonGroup>: null}
             {props.showEditButton ? (
                 editMode ?

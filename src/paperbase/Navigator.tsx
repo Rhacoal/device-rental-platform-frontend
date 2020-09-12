@@ -17,6 +17,7 @@ import SettingsInputComponentIcon from '@material-ui/icons/SettingsInputComponen
 import TimerIcon from '@material-ui/icons/Timer';
 import SettingsIcon from '@material-ui/icons/Settings';
 import PhonelinkSetupIcon from '@material-ui/icons/PhonelinkSetup';
+import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import {Omit} from '@material-ui/types';
@@ -44,7 +45,11 @@ const categories = [
         permission: ['borrower', 'admin', 'provider'],
         children: [
             {id: '我的个人信息', icon: <HomeIcon/>, link: LocalUrls.main_page, except: []},
-            {id: '恢复信用分', icon: <AddBoxIcon/>, link: LocalUrls.apply_credit, except: []},
+            {id: '恢复信用分', icon: <SettingsBackupRestoreIcon/>, link: LocalUrls.apply_credit, except: []},
+            {id: '设备列表', icon: <DnsRoundedIcon/>, link: LocalUrls.devices, except: []},
+            {id: '我借用的', icon: <DnsRoundedIcon/>, link: LocalUrls.borrowed_devices, except: []},
+            {id: '我的借用申请', icon: <DnsRoundedIcon/>, link: LocalUrls.apply_borrow, except: []},
+            {id: '申请成为设备提供者', icon: <DnsRoundedIcon/>, link: LocalUrls.become_provider, except: ['provider', 'admin']},
         ],
     },
     {
@@ -61,17 +66,7 @@ const categories = [
         ],
     },
     {
-        id: '设备借用',
-        permission: ['borrower', 'admin', 'provider'],
-        children: [
-            {id: '设备列表', icon: <DnsRoundedIcon/>, link: LocalUrls.devices, except: []},
-            {id: '我借用的', icon: <DnsRoundedIcon/>, link: LocalUrls.borrowed_devices, except: []},
-            {id: '我的借用申请', icon: <DnsRoundedIcon/>, link: LocalUrls.apply_borrow, except: []},
-            {id: '申请成为设备提供者', icon: <DnsRoundedIcon/>, link: LocalUrls.become_provider, except: ['provider', 'admin']},
-        ],
-    },
-    {
-        id: '设备管理员',
+        id: '设备提供者',
         permission: ['admin', 'provider'],
         children: [
             {id: '我提供的设备', icon: <DnsRoundedIcon/>, link: LocalUrls.devices_provider, except: []},

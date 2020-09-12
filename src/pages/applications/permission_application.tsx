@@ -26,6 +26,7 @@ import {Edit} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import {KeyValueView} from "../user_list";
 import {VerticalSpacer} from "../../components/vertical_spacer";
+import {UserNameLink} from "../../components/user_name_link";
 
 const permissionApplicationProps = {
     apiRoot: applyBecomeProviderAPIs,
@@ -43,7 +44,7 @@ const permissionApplicationProps = {
         return <React.Fragment>
             {value.handler ? <React.Fragment>
                 <KeyValueView keyString={"处理人"}
-                              value={value.handler.name}/>
+                              value={<UserNameLink userInfo={value.handler}/>}/>
                 <KeyValueView keyString={"邮箱"}
                               value={value.handler.email}/>
                 <KeyValueView keyString={"处理者备注"}
@@ -59,7 +60,7 @@ const permissionApplicationProps = {
         </React.Fragment>
     },
     titleRenderer: (value: IPermissionApplication) => {
-        return `${value.applicant.name} 的申请`;
+        return <React.Fragment>{value.applicant.name}{" 的申请"}</React.Fragment>;
     }
 }
 

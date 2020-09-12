@@ -20,6 +20,7 @@ import {Alert} from "@material-ui/lab";
 import Typography from "@material-ui/core/Typography";
 import {Edit, Replay} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
+import {UserNameLink} from "../../components/user_name_link";
 
 const creditApplicationPageProps = {
     apiRoot: applyCreditAPIs,
@@ -38,7 +39,7 @@ const creditApplicationPageProps = {
         return <React.Fragment>
             {value.handler ? <React.Fragment>
                 <KeyValueView keyString={"处理人"}
-                              value={value.handler.name}/>
+                              value={<UserNameLink userInfo={value.handler}/>}/>
                 <KeyValueView keyString={"邮箱"}
                               value={value.handler.email}/>
                 <KeyValueView keyString={"处理者备注"}
@@ -48,7 +49,7 @@ const creditApplicationPageProps = {
             <KeyValueView keyString={"申请理由"}
                           value={value.reason}/>
             <KeyValueView keyString={"申请人"}
-                          value={value.applicant.name}/>
+                          value={<UserNameLink userInfo={value.applicant}/>}/>
             <KeyValueView keyString={"学号"}
                           value={value.applicant.student_id}/>
             <KeyValueView keyString={"邮箱"}
@@ -58,7 +59,7 @@ const creditApplicationPageProps = {
         </React.Fragment>
     },
     titleRenderer: (value: ICreditApplication) => {
-        return `${value.applicant.name} 的申请`;
+        return <React.Fragment>{value.applicant.name}{' '}{`的申请`}</React.Fragment>;
     }
 }
 

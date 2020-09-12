@@ -57,6 +57,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import HelpIcon from "@material-ui/icons/Help";
+import {UserNameLink} from "../components/user_name_link";
 
 const useStyles = makeStyles(theme => createStyles({
     paper: {
@@ -237,7 +238,7 @@ export function DeviceView(props: {
         </span>
         <Grid container justify="space-between">
             <Grid item>
-                <Typography variant="body2" color="textSecondary">提供者: {props.deviceDetail.owner.name}</Typography>
+                <Typography variant="body2" color="textSecondary">提供者: <UserNameLink userInfo={props.deviceDetail.owner}/></Typography>
             </Grid>
             <Grid item>
                 <IconButton className={clsx(classes.expand, {

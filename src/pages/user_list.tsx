@@ -37,6 +37,7 @@ import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import AppBar from "@material-ui/core/AppBar";
+import {UserNameLink} from "../components/user_name_link";
 
 const useStyles = makeStyles(theme => createStyles({
     root: {
@@ -155,7 +156,7 @@ function UserRow(props: {
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box margin={1}>
                             <KeyValueView keyString={"姓名"}
-                                          value={props.row.name}/>
+                                          value={<UserNameLink userInfo={props.row}/>}/>
                             <KeyValueView keyString={"学号"}
                                           value={props.row.student_id}/>
                             <KeyValueView keyString={"邮箱"}

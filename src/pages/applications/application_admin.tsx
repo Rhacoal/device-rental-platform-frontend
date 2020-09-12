@@ -39,6 +39,7 @@ import {MaxApplicationsPerPage, MaxDevicesPerPage} from "../../constants/constan
 import {Alert, Pagination} from "@material-ui/lab";
 import {formatTime, toShortTimeString} from "../../utils/time_format";
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import {UserNameLink} from "../../components/user_name_link";
 
 const useStyles = makeStyles(theme => createStyles({
     listItem: {
@@ -166,7 +167,7 @@ function ApplicationStatus(props: {
 
 export type ApplicationViewProps<T extends IApplication> = PropsWithChildren<{
     application: T,
-    applicationTitle: string,
+    applicationTitle: React.ReactNode,
     canApprove: boolean,
     canCancel: boolean,
     onApprove: (id: number, reason: string) => unknown,
@@ -187,7 +188,7 @@ export function ApplicationView<T extends IApplication>(props: ApplicationViewPr
         </span>
         <Grid container justify="space-between">
             <Grid item>
-                <Typography variant="body2" color="textSecondary">申请人: {props.application.applicant.name}</Typography>
+                <Typography variant="body2" color="textSecondary">申请人: <UserNameLink userInfo={props.application.applicant}/></Typography>
                 {
                     props.application.status === ApplicationPending.code ?
                         <Typography variant="body2"
@@ -306,7 +307,7 @@ export function ApplicationViewPage<T extends IApplication>(props: {
     filterPlaceholder: string,
     // title: (application: T) => React.ReactNode,
     renderer: (application: T) => React.ReactNode,
-    titleRenderer: (application: T) => string,
+    titleRenderer: (application: T) => React.ReactNode,
     canApprove: boolean,
     refresh?: boolean,
 }) {

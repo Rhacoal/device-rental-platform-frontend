@@ -23,6 +23,7 @@ import {Urls} from "../../wrapper/urls";
 import {VerticalSpacer} from "../../components/vertical_spacer";
 import {DeviceDetailRenderer} from "../../utils/device_description_renderer";
 import {MetaKeyDescription} from "../../constants/meta_header_keys";
+import {UserNameLink} from "../../components/user_name_link";
 
 const deviceCreateApplicationProps = {
     apiRoot: applyCreateDeviceAPIs,
@@ -40,7 +41,7 @@ const deviceCreateApplicationProps = {
         return <React.Fragment>
             {value.handler ? <React.Fragment>
                 <KeyValueView keyString={"处理人"}
-                              value={value.handler.name}/>
+                              value={<UserNameLink userInfo={value.handler}/>}/>
                 <KeyValueView keyString={"邮箱"}
                               value={value.handler.email}/>
                 <KeyValueView keyString={"处理者备注"}
@@ -48,7 +49,7 @@ const deviceCreateApplicationProps = {
                 <VerticalSpacer/>
             </React.Fragment> : null}
             <KeyValueView keyString={"申请人"}
-                          value={value.applicant.name}/>
+                          value={<UserNameLink userInfo={value.applicant}/>}/>
             <KeyValueView keyString={"学号"}
                           value={value.applicant.student_id}/>
             <KeyValueView keyString={"邮箱"}
