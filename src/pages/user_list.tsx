@@ -38,6 +38,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import AppBar from "@material-ui/core/AppBar";
 import {UserNameLink} from "../components/user_name_link";
+import {PageTitle} from "../components/page_title";
 
 const useStyles = makeStyles(theme => createStyles({
     root: {
@@ -360,11 +361,14 @@ export function UserListPage(props: RouteComponentProps) {
         })
     }, [props, refresh]);
 
-    return <Container>
-        {errorMessage ? <Alert severity="error">{errorMessage}</Alert> : null}
-        <UserList users={users}
-                  onRefresh={() => {
-                      setRefresh(!refresh);
-                  }}/>
-    </Container>
+    return <React.Fragment>
+        <PageTitle><Typography variant="h5" component="h1">用户管理</Typography></PageTitle>
+        <Container>
+            {errorMessage ? <Alert severity="error">{errorMessage}</Alert> : null}
+            <UserList users={users}
+                      onRefresh={() => {
+                          setRefresh(!refresh);
+                      }}/>
+        </Container>
+    </React.Fragment>;
 }

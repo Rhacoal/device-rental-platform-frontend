@@ -11,7 +11,7 @@ import {Provider, useDispatch, useSelector} from 'react-redux';
 import SignIn from "./pages/signin";
 import {LocalUrls} from "./constants/local_urls";
 import SignUp from "./pages/signup";
-import {DeviceListPage} from "./pages/device_list";
+import {DeviceListAllPage, DeviceListPage} from "./pages/device_list";
 import {
     DeviceBorrowApplicationAdminPage,
     DeviceBorrowApplicationProviderPage, DeviceBorrowApplicationSelfPage
@@ -202,7 +202,7 @@ function UserInfoComponent(props: RouteComponentProps) {
         </Route>
         <Route path={LocalUrls.main_page} component={Profile}/>
         <Route path={LocalUrls.user_info} component={Profile}/>
-        <Route path={LocalUrls.devices} component={DeviceListPage}/>
+        <Route path={LocalUrls.devices} component={DeviceListAllPage}/>
         <Route path={LocalUrls.apply_credit} component={CreditApplicationSelfPage}/>
         {/* 管理员页面 */}
         <Route path={LocalUrls.user_admin} component={UserListPage}/>

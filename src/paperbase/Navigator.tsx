@@ -47,7 +47,7 @@ const categories = [
             {id: '我的个人信息', icon: <HomeIcon/>, link: LocalUrls.main_page, except: []},
             {id: '恢复信用分', icon: <SettingsBackupRestoreIcon/>, link: LocalUrls.apply_credit, except: []},
             {id: '设备列表', icon: <DnsRoundedIcon/>, link: LocalUrls.devices, except: []},
-            {id: '我借用的', icon: <DnsRoundedIcon/>, link: LocalUrls.borrowed_devices, except: []},
+            {id: '我借用的设备', icon: <DnsRoundedIcon/>, link: LocalUrls.borrowed_devices, except: []},
             {id: '我的借用申请', icon: <DnsRoundedIcon/>, link: LocalUrls.apply_borrow, except: []},
             {id: '申请成为设备提供者', icon: <DnsRoundedIcon/>, link: LocalUrls.become_provider, except: ['provider', 'admin']},
         ],

@@ -34,6 +34,11 @@ export const ApplicationCanceled: ApplicationStatusCode = {
     description: "已撤销"
 }
 
+export const ApplicationOvertime: ApplicationStatusCode = {
+    code: 4,
+    description: "逾期未还"
+}
+
 export const ApplicationUnknown: ApplicationStatusCode = {
     code: -100,
     description: "未知状态"

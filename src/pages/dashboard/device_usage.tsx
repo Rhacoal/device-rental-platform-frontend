@@ -36,9 +36,9 @@ export function DeviceUsageView(props: {
                 data: [dashboard.device_borrowed, dashboard.device_expired,
                     (dashboard.device_total - dashboard.device_expired - dashboard.device_borrowed)],
                 backgroundColor: [
-                    colors.indigo[500],
+                    colors.orange[500],
                     colors.red[600],
-                    colors.orange[600]
+                    colors.green[600]
                 ],
                 borderWidth: 8,
                 borderColor: colors.common.white,
@@ -75,7 +75,7 @@ export function DeviceUsageView(props: {
             title: '待归还',
             value: dashboard.device_borrowed,
             //icon: LaptopMacIcon,
-            color: colors.indigo[500]
+            color: colors.orange[500]
         },
         {
             title: '过期借用',
@@ -87,7 +87,7 @@ export function DeviceUsageView(props: {
             title: '空闲',
             value: (dashboard.device_total - dashboard.device_expired - dashboard.device_borrowed),
             //icon: PhoneIcon,
-            color: colors.orange[600]
+            color: colors.green[600]
         }
     ];
 

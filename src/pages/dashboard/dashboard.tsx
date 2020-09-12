@@ -87,7 +87,7 @@ export function DashboardPage(props: RouteComponentProps) {
 
     return <Container maxWidth={false}>
         <div style={{marginBottom: 16}}>
-            <Typography variant="h4" component="h1">统计数据</Typography>
+            <Typography variant="h5" component="h1">统计信息</Typography>
             <Typography variant="body1" color="textSecondary">{`截至 ${formatTime(new Date().getTime() / 1000)}`}</Typography>
         </div>
         {

@@ -8,6 +8,9 @@ import {KeyValueView} from "../user_list";
 import {VerticalSpacer} from "../../components/vertical_spacer";
 import {formatTime} from "../../utils/time_format";
 import {UserNameLink} from "../../components/user_name_link";
+import {Button, ButtonGroup} from "@material-ui/core";
+import {Edit} from "@material-ui/icons";
+import {PageTitle} from "../../components/page_title";
 
 const deviceBorrowApplicationPageProps = {
     apiRoot: applyBorrowDeviceAPIs,
@@ -54,13 +57,28 @@ const deviceBorrowApplicationPageProps = {
 }
 
 export function DeviceBorrowApplicationAdminPage(props: RouteComponentProps) {
-    return <ApplicationViewPage {...deviceBorrowApplicationPageProps} role="admin" canApprove={true}/>
+    return <React.Fragment>
+        <PageTitle>
+            <Typography variant="h5" component="span">{"设备借用申请处理 (管理员)"}</Typography>
+        </PageTitle>
+        <ApplicationViewPage {...deviceBorrowApplicationPageProps} role="admin" canApprove={true}/>
+    </React.Fragment>;
 }
 
 export function DeviceBorrowApplicationProviderPage(props: RouteComponentProps) {
-    return <ApplicationViewPage {...deviceBorrowApplicationPageProps} role="provider" canApprove={true}/>
+    return <React.Fragment>
+        <PageTitle>
+            <Typography variant="h5" component="span">{"设备借用申请处理 (提供者)"}</Typography>
+        </PageTitle>
+        <ApplicationViewPage {...deviceBorrowApplicationPageProps} role="provider" canApprove={true}/>
+    </React.Fragment>;
 }
 
 export function DeviceBorrowApplicationSelfPage(props: RouteComponentProps) {
-    return <ApplicationViewPage {...deviceBorrowApplicationPageProps} role="self" canApprove={false}/>
+    return <React.Fragment>
+        <PageTitle>
+            <Typography variant="h5" component="span">{"我的设备借用申请"}</Typography>
+        </PageTitle>
+        <ApplicationViewPage {...deviceBorrowApplicationPageProps} role="self" canApprove={false}/>
+    </React.Fragment>;
 }

@@ -45,9 +45,9 @@ const useStyles = makeStyles(theme => createStyles({
 }))
 
 export function DeviceListProviderPage(props: RouteComponentProps) {
-    return <DeviceListPage provider={true}/>
+    return <DeviceListPage provider={true} title={"我提供的设备"}/>
 }
 
 export function DeviceListSelfPage(props: RouteComponentProps) {
-    return <DeviceListPage borrower={true}/>
+    return <DeviceListPage borrower={true} title={"我借用的设备"}/>
 }

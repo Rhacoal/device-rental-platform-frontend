@@ -21,6 +21,7 @@ import Typography from "@material-ui/core/Typography";
 import {Edit, Replay} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import {UserNameLink} from "../../components/user_name_link";
+import {PageTitle} from "../../components/page_title";
 
 const creditApplicationPageProps = {
     apiRoot: applyCreditAPIs,
@@ -64,7 +65,12 @@ const creditApplicationPageProps = {
 }
 
 export function CreditApplicationAdminPage(props: RouteComponentProps) {
-    return <ApplicationViewPage {...creditApplicationPageProps} role="admin" canApprove={true}/>
+    return <React.Fragment>
+        <PageTitle>
+            <Typography variant="h5" component="span">{"信用分恢复申请处理"}</Typography>
+        </PageTitle>
+        <ApplicationViewPage {...creditApplicationPageProps} role="admin" canApprove={true}/>
+    </React.Fragment>;
 }
 
 
@@ -83,7 +89,6 @@ const useStyles = makeStyles(theme => createStyles({
         }
     },
     container: {
-        marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
         "& .MuiButtonGroup-root": {
             alignSelf: "flex-end",
@@ -135,15 +140,15 @@ export function CreditApplicationSelfPage(props: RouteComponentProps) {
                 </Alert>
             </Snackbar>
             <div className="title">
-                <Typography variant="h5" component="span">信用分恢复</Typography>
+                <Typography variant="h5" component="span">信用分恢复申请</Typography>
                 <ButtonGroup component="span">
                     <Button variant={open ? "outlined" : "contained"} onClick={() => {
                         setOpen(true);
                         setApplyReason("");
                     }}
                             color="primary">
-                        <Replay/>
-                        申请恢复信用分
+                        <Edit/>
+                        申请
                     </Button>
                 </ButtonGroup>
             </div>

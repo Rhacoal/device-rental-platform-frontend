@@ -26,6 +26,7 @@ import {VerticalSpacer} from "../../components/vertical_spacer";
 import {DeviceDetailRenderer} from "../../utils/device_description_renderer";
 import {MetaKeyDescription} from "../../constants/meta_header_keys";
 import {UserNameLink} from "../../components/user_name_link";
+import {PageTitle} from "../../components/page_title";
 
 const deviceCreateApplicationProps = {
     apiRoot: applyCreateDeviceAPIs,
@@ -70,7 +71,12 @@ const deviceCreateApplicationProps = {
 }
 
 export function DeviceCreateApplicationAdminPage(props: RouteComponentProps) {
-    return <ApplicationViewPage {...deviceCreateApplicationProps} role="admin" canApprove={true}/>
+    return <React.Fragment>
+        <PageTitle>
+            <Typography variant="h5" component="span">{"设备上架申请处理"}</Typography>
+        </PageTitle>
+        <ApplicationViewPage {...deviceCreateApplicationProps} role="admin" canApprove={true}/>
+    </React.Fragment>
 }
 
 const useStyles = makeStyles(theme => createStyles({
@@ -88,7 +94,6 @@ const useStyles = makeStyles(theme => createStyles({
         }
     },
     container: {
-        marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
         "& .MuiButtonGroup-root": {
             alignSelf: "flex-end",
@@ -142,14 +147,14 @@ export function DeviceCreateApplicationProviderPage(props: RouteComponentProps) 
                 </Alert>
             </Snackbar>
             <div className="title">
-                <Typography variant="h5" component="span">上架申请</Typography>
+                <Typography variant="h5" component="span">上架设备申请</Typography>
                 <ButtonGroup component="span">
                     <Button variant={open ? "outlined" : "contained"} onClick={() => {
                         setOpen(true);
                     }}
                             color="primary">
                         <Edit/>
-                        申请上架设备
+                        申请
                     </Button>
                 </ButtonGroup>
             </div>

@@ -40,9 +40,9 @@ export function ApplicationStatistics(props: {
                     dashboard.apply_recover_credit],
                 backgroundColor: [
                     colors.indigo[500],
-                    colors.red[600],
-                    colors.orange[600],
-                    colors.green[600],
+                    colors.teal[600],
+                    colors.amber[600],
+                    colors.lightGreen[600],
                 ],
                 borderWidth: 8,
                 borderColor: colors.common.white,
@@ -84,17 +84,17 @@ export function ApplicationStatistics(props: {
         {
             title: '提权',
             value: dashboard.apply_become_provider,
-            color: colors.red[600]
+            color: colors.teal[600]
         },
         {
             title: '上架',
             value: dashboard.apply_create_device,
-            color: colors.orange[600]
+            color: colors.amber[600]
         },
         {
             title:  '信用分' ,
             value: dashboard.apply_recover_credit,
-            color: colors.green[600]
+            color: colors.lightGreen[600]
         }
     ];
 

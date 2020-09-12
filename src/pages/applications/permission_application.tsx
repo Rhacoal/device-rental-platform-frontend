@@ -27,6 +27,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {KeyValueView} from "../user_list";
 import {VerticalSpacer} from "../../components/vertical_spacer";
 import {UserNameLink} from "../../components/user_name_link";
+import {PageTitle} from "../../components/page_title";
 
 const permissionApplicationProps = {
     apiRoot: applyBecomeProviderAPIs,
@@ -65,7 +66,12 @@ const permissionApplicationProps = {
 }
 
 export function PermissionApplicationAdminPage(props: RouteComponentProps) {
-    return <ApplicationViewPage {...permissionApplicationProps} role="admin" canApprove={true}/>
+    return <React.Fragment>
+        <PageTitle>
+            <Typography variant="h5" component="span">{"成为设备提供者申请处理"}</Typography>
+        </PageTitle>
+        <ApplicationViewPage {...permissionApplicationProps} role="admin" canApprove={true}/>
+    </React.Fragment>;
 }
 
 
@@ -84,12 +90,7 @@ const useStyles = makeStyles(theme => createStyles({
         }
     },
     container: {
-        marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
-        padding: 0,
-        // display: "flex",
-        // flexDirection: "column",
-        // alignItems: "stretch",
         "& .MuiButtonGroup-root": {
             alignSelf: "flex-end",
         },
@@ -132,7 +133,7 @@ export function PermissionApplicationSelfPage(props: RouteComponentProps) {
     }
 
     return <React.Fragment>
-        <Container maxWidth="md" className={classes.container}>
+        <Container maxWidth="lg" className={classes.container}>
             <Snackbar open={snackOpen} autoHideDuration={6000} onClose={() => setSnackOpen(false)}>
                 <Alert onClose={() => setSnackOpen(false)} severity="success">
                     申请成功
@@ -141,7 +142,7 @@ export function PermissionApplicationSelfPage(props: RouteComponentProps) {
             <div className="title">
                 <Typography variant="h5" component="span">成为设备提供者申请</Typography>
                 <ButtonGroup component="span">
-                    <Button variant="contained" onClick={() => {
+                    <Button variant={open ? "outlined" : "contained"} onClick={() => {
                         setOpen(true);
                     }}
                             color="primary">
@@ -160,11 +161,18 @@ export function PermissionApplicationSelfPage(props: RouteComponentProps) {
                                    setApplicationReason(event.target.value)
                                }}
                     />
-                    <Button color="primary"
-                            variant="outlined"
-                            onClick={handleSubmitApplication}>
-                        提交申请
-                    </Button>
+                    <ButtonGroup>
+                        <Button color="primary"
+                                variant="contained"
+                                onClick={handleSubmitApplication}>
+                            提交申请
+                        </Button>
+                        <Button color="default"
+                                variant="contained"
+                                onClick={() => setOpen(false)}>
+                            取消
+                        </Button>
+                    </ButtonGroup>
                     {errorMessage ? <Alert severity="error">
                         {errorMessage}
                     </Alert> : null}

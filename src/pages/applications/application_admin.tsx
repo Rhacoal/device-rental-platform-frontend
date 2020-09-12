@@ -15,12 +15,13 @@ import {
 import {makeStyles} from "@material-ui/core/styles";
 import CachedIcon from '@material-ui/icons/Cached';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 import CancelIcon from '@material-ui/icons/Cancel';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import HelpIcon from '@material-ui/icons/Help';
 import {
-    ApplicationApproved, ApplicationApprovedReturned, ApplicationCanceled,
+    ApplicationApproved, ApplicationApprovedReturned, ApplicationCanceled, ApplicationOvertime,
     ApplicationPending,
     ApplicationRejected, ApplicationStatusOrder,
     ApplicationUnknown
@@ -70,6 +71,9 @@ const useStyles = makeStyles(theme => createStyles({
     },
     marginTopBottom1: {
         margin: theme.spacing(1, 0),
+    },
+    overtimeStatus: {
+        color: theme.palette.warning.main,
     },
     approveButton: {
         backgroundColor: theme.palette.success.light,
@@ -148,6 +152,13 @@ function ApplicationStatus(props: {
                         return <React.Fragment>
                             <CheckCircleIcon color="primary"/>
                             <Typography color="primary" variant="body1" component="span">
+                                {ApplicationApprovedReturned.description}
+                            </Typography>
+                        </React.Fragment>
+                    case ApplicationOvertime.code:
+                        return <React.Fragment>
+                            <ErrorIcon className={classes.overtimeStatus}/>
+                            <Typography className={classes.overtimeStatus} variant="body1" component="span">
                                 {ApplicationApprovedReturned.description}
                             </Typography>
                         </React.Fragment>

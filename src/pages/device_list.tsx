@@ -19,13 +19,13 @@ import {
     Box, ButtonGroup,
     Collapse, colors,
     Container, Divider,
-    FormControl,
+    FormControl, FormControlLabel,
     InputLabel,
     List,
     ListItem,
     ListItemText,
     MenuItem,
-    Select, Snackbar
+    Select, Snackbar, Switch
 } from "@material-ui/core";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
@@ -58,12 +58,25 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import HelpIcon from "@material-ui/icons/Help";
 import {UserNameLink} from "../components/user_name_link";
+import {Edit} from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => createStyles({
     paper: {
         // maxWidth: 960,
         margin: 'auto',
         overflow: 'hidden',
+    },
+    titleContainer: {
+        padding: theme.spacing(0, 0, 2, 0),
+        "& .MuiButtonGroup-root": {
+            alignSelf: "flex-end",
+        },
+        "& .title": {
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+        }
     },
     container: {
         // maxHeight: "calc(100vh - 128px)",
@@ -238,7 +251,8 @@ export function DeviceView(props: {
         </span>
         <Grid container justify="space-between">
             <Grid item>
-                <Typography variant="body2" color="textSecondary">提供者: <UserNameLink userInfo={props.deviceDetail.owner}/></Typography>
+                <Typography variant="body2" color="textSecondary">提供者: <UserNameLink
+                    userInfo={props.deviceDetail.owner}/></Typography>
             </Grid>
             <Grid item>
                 <IconButton className={clsx(classes.expand, {
@@ -320,6 +334,8 @@ export function DeviceListPage(props: {
     provider?: boolean,
     borrower?: boolean,
     admin?: boolean
+    title: string,
+    availableOnlySwitch?: boolean
 }) {
     const classes = useStyles(useTheme());
     const [devices, setDevices] = React.useState([] as IDevice[]);
@@ -330,6 +346,7 @@ export function DeviceListPage(props: {
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const userInfo = useSelector((store: IStore) => store.user.userInfo);
     const [snackOpen, setSnackOpen] = React.useState(false);
+    const [availableOnly, setAvailableOnly] = React.useState(false);
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -361,6 +378,7 @@ export function DeviceListPage(props: {
     }
 
     const actualList = devices.filter((value) => {
+        if (availableOnly && value.borrower) return false;
         if (filterString) {
             return (
                 value.device_id.toString().indexOf(filterString) !== -1
@@ -377,6 +395,20 @@ export function DeviceListPage(props: {
                 {"已刷新！"}
             </Alert>
         </Snackbar>
+
+        <Container maxWidth="lg" className={classes.titleContainer}>
+            <div className="title">
+                <Typography variant="h5" component="span">{props.title}</Typography>
+                {props.availableOnlySwitch ?
+                    <FormControlLabel
+                        control={<Switch checked={availableOnly}
+                                         onChange={(evt, checked) => setAvailableOnly(checked)}
+                        />}
+                        label="只显示可借用的"
+                    /> : null}
+            </div>
+        </Container>
+
         <Paper className={classes.paper}>
             <AppBar className={classes.searchBar} position="static" color="default" elevation={0}>
                 <Toolbar>
@@ -432,53 +464,24 @@ export function DeviceListPage(props: {
                                                                  onEdit={triggerRefresh}
                                             />
                                         }/>
-                                        <Divider component="li" className={classes.divider} />
+                                        <Divider component="li" className={classes.divider}/>
                                     </React.Fragment>
                                 );
                             })}
                         </List>
-                        {/*<TableContainer className={classes.container}>*/}
-                        {/*    <Table stickyHeader aria-label="sticky table">*/}
-                        {/*        <TableHead>*/}
-                        {/*            <TableRow>*/}
-                        {/*                <TableCell style={{maxWidth: "30px"}}/>*/}
-                        {/*                {columns.map((column) => (*/}
-                        {/*                    <TableCell*/}
-                        {/*                        key={column.id}*/}
-                        {/*                        align={column.align}*/}
-                        {/*                        style={{width: column.minWidth}}*/}
-                        {/*                    >*/}
-                        {/*                        {column.label}*/}
-                        {/*                    </TableCell>*/}
-                        {/*                ))}*/}
-                        {/*            </TableRow>*/}
-                        {/*        </TableHead>*/}
-                        {/*        <TableBody>*/}
-                        {/*        </TableBody>*/}
-                        {/*    </Table>*/}
-                        {/*</TableContainer>*/}
-                        {/*<TablePagination*/}
-                        {/*    rowsPerPageOptions={[10, 25, 50]}*/}
-                        {/*    component="div"*/}
-                        {/*    count={actualList.length}*/}
-                        {/*    rowsPerPage={rowsPerPage}*/}
-                        {/*    page={page}*/}
-                        {/*    onChangePage={handleChangePage}*/}
-                        {/*    onChangeRowsPerPage={handleChangeRowsPerPage}*/}
-                        {/*/>*/}
                         <Pagination
                             style={{alignSelf: "center"}}
-                            // component="div"
                             count={Math.max(1, Math.ceil(actualList.length / MaxDevicesPerPage))}
-                            // rowsPerPage={rowsPerPage}
                             page={page}
-                            // onChangePage={handleChangePage}
                             onChange={handleChangePage}
-                            // onChangeRowsPerPage={handleChangeRowsPerPage}
                         />
                     </div>
                 )
             }
         </Paper>
     </Container>
+}
+
+export function DeviceListAllPage(props: RouteComponentProps) {
+    return <DeviceListPage title={"设备列表"} availableOnlySwitch={true}/>
 }
