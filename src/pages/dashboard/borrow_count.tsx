@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export function BorrowThisMonth(props: any) {
+export function BorrowCount(props: any) {
     const {className, dashboard: _dashboard, ...rest} = props;
     const dashboard: IDashboard = _dashboard;
     const classes = useStyles();
@@ -56,7 +56,7 @@ export function BorrowThisMonth(props: any) {
                             gutterBottom
                             variant="h6"
                         >
-                            设备借用次数
+                            借用中的设备
                         </Typography>
                         <Typography
                             color="textPrimary"

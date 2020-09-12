@@ -105,17 +105,19 @@ export interface IDashboard {
     // 平台正被借用设备总数（不包括过期）
     "device_borrowed": number,
     // 平台过期借用设备总数
-    "device_expired": number,
+    // "device_expired": number,
     // 平台空闲设备总数
     "device_free": number,
     // 平台设备总共借用次数（不包括申请中）
     "apply_borrow_total": number,
     // 平台设备借用申请中数目
-    "apply_borrow_pending": number,
+    "apply_borrow": number,
     // 平台正在申请成为provider的数量
     "apply_become_provider": number,
     // 平台正在申请上架设备的数量
     "apply_create_device": number,
+    // 平台正在申请分恢复处理的数量
+    "apply_recover_credit": number,
     // 平台设备归还次数
     "return_device": number,
     // 平台用户人数

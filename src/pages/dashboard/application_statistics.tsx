@@ -34,19 +34,22 @@ export function ApplicationStatistics(props: {
     const data = {
         datasets: [
             {
-                data: [dashboard.apply_borrow_pending,
-                    (dashboard.apply_borrow_total)],
+                data: [dashboard.apply_borrow,
+                    dashboard.apply_become_provider,
+                    dashboard.apply_create_device,
+                    dashboard.apply_recover_credit],
                 backgroundColor: [
                     colors.indigo[500],
                     colors.red[600],
-                    colors.orange[600]
+                    colors.orange[600],
+                    colors.green[600],
                 ],
                 borderWidth: 8,
                 borderColor: colors.common.white,
                 hoverBorderColor: colors.common.white
             }
         ],
-        labels: ['待处理的借用请求', '已处理的借用请求']
+        labels: ['借用', '提权', '上架', '信用分']
     };
 
     const options = {
@@ -73,15 +76,25 @@ export function ApplicationStatistics(props: {
 
     const applies = [
         {
-            title: '待处理',
-            value: dashboard.apply_borrow_pending,
+            title: '借用',
+            value: dashboard.apply_borrow,
             //icon: LaptopMacIcon,
             color: colors.indigo[500]
         },
         {
-            title: '已处理',
-            value: dashboard.apply_borrow_total,
+            title: '提权',
+            value: dashboard.apply_become_provider,
             color: colors.red[600]
+        },
+        {
+            title: '上架',
+            value: dashboard.apply_create_device,
+            color: colors.orange[600]
+        },
+        {
+            title:  '信用分' ,
+            value: dashboard.apply_recover_credit,
+            color: colors.green[600]
         }
     ];
 
@@ -90,11 +103,12 @@ export function ApplicationStatistics(props: {
             className={clsx(classes.root, className)}
             {...rest}
         >
-            <CardHeader title="借用请求处理情况"/>
-            <Divider/>
+            <CardHeader title="待处理请求"/>
+            <Divider style={{backgroundColor: theme.palette.divider}}/>
             <CardContent>
                 <Box
                     height={300}
+                    width={300}
                     position="relative"
                 >
                     <Doughnut

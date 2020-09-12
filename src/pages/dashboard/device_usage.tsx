@@ -97,10 +97,11 @@ export function DeviceUsageView(props: {
             {...rest}
         >
             <CardHeader title="设备借用情况"/>
-            <Divider/>
+            <Divider style={{backgroundColor: theme.palette.divider}}/>
             <CardContent>
                 <Box
                     height={300}
+                    width={300}
                     position="relative"
                 >
                     <Doughnut

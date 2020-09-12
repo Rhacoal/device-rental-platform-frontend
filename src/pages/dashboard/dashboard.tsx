@@ -17,29 +17,42 @@ import {
 } from "@material-ui/core";
 import {Alert, Skeleton} from "@material-ui/lab";
 import {DeviceUsageView} from "./device_usage";
-import {ApplicationStatistics} from "./application_status";
-import {BorrowThisMonth} from "./borrow_this_month";
+import {ApplicationStatistics} from "./application_statistics";
+import {BorrowCount} from "./borrow_count";
 import {makeStyles} from "@material-ui/core/styles";
 import {UserCount} from "./user_count";
 import {formatTime} from "../../utils/time_format";
+
+const useStyles = makeStyles(createStyles({
+    "card": {
+        "& .MuiCardContent-root": {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            paddingLeft: "12px",
+            paddingRight: "12px",
+        }
+    }
+}))
 
 function DashboardView(props: {
     dashboard: IDashboard
 }) {
     const {dashboard} = props;
+    const classes = useStyles();
 
     return (
         <React.Fragment>
             <Grid container spacing={3}>
                 <Grid item lg={4} md={6} xs={12}>
-                    <DeviceUsageView dashboard={dashboard} className={""}/>
+                    <DeviceUsageView dashboard={dashboard} className={classes.card}/>
                 </Grid>
                 <Grid item lg={4} md={6} xs={12}>
-                    <ApplicationStatistics dashboard={dashboard} className={""}/>
+                    <ApplicationStatistics dashboard={dashboard} className={classes.card}/>
                 </Grid>
                 <Grid item lg={4} md={12} xs={12} container>
                     <Grid item xs={12} style={{height: "min-content"}}>
-                        <BorrowThisMonth dashboard={dashboard} className={""}/>
+                        <BorrowCount dashboard={dashboard} className={classes.card}/>
                     </Grid>
                     <Grid item xs={12} style={{marginTop: 24}}>
                         <UserCount dashboard={dashboard} className={""} />
