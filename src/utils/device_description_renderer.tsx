@@ -1,5 +1,8 @@
 import React from "react";
 import {Typography} from "@material-ui/core";
+import {IDevice, IMetaHeaders} from "../wrapper/types";
+import {KeyValueView} from "../pages/user_list";
+import {MetaKeyDescription} from "../constants/meta_header_keys";
 
 
 export function DeviceDescriptionSplitter(value: string) : {
@@ -18,12 +21,17 @@ export function DeviceDescriptionSplitter(value: string) : {
     }
 }
 
-export function DeviceDescription(props: {
-    value: string,
+export function DeviceDetailRenderer(props: {
+    description: string,
+    meta: IMetaHeaders,
+    // editMode: boolean,
+    // onChange: (name: string, description: string, meta: IMetaHeaders) => unknown,
 }) {
-    const {address, description} = DeviceDescriptionSplitter(props.value);
+    // const {address, description} = DeviceDescriptionSplitter(props.value);
+    const { description, meta } = props;
+    const address = meta.address || "";
     return (<React.Fragment>
-        {address ? <Typography>{`地址: ${address}`}</Typography> : null}
+        {address ? <KeyValueView keyString={MetaKeyDescription.address} value={address}/> : null}
         <Typography>{description}</Typography>
     </React.Fragment>);
 }

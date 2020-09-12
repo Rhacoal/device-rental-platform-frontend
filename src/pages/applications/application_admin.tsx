@@ -1,9 +1,9 @@
 import React, {PropsWithChildren} from "react";
-import {IApplication, IDeviceBorrowApplication, Optional} from "../wrapper/types";
+import {IApplication, IDeviceBorrowApplication, Optional} from "../../wrapper/types";
 import {
     Button,
     ButtonGroup,
-    Collapse, colors,
+    Collapse, colors, Container,
     createStyles, Divider,
     Grid,
     IconButton,
@@ -25,9 +25,9 @@ import {
     ApplicationPending,
     ApplicationRejected, ApplicationStatusOrder,
     ApplicationUnknown
-} from "../constants/application_status";
+} from "../../constants/application_status";
 import clsx from "clsx";
-import {ApplicationAPISet, applyBorrowDeviceAPIs, Result} from "../wrapper/requests";
+import {ApplicationAPISet, applyBorrowDeviceAPIs, Result} from "../../wrapper/requests";
 import Paper from "@material-ui/core/Paper";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -35,9 +35,9 @@ import SearchIcon from "@material-ui/icons/Search";
 import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
 import RefreshIcon from "@material-ui/icons/Refresh";
-import {MaxApplicationsPerPage, MaxDevicesPerPage} from "../constants/constants";
+import {MaxApplicationsPerPage, MaxDevicesPerPage} from "../../constants/constants";
 import {Alert, Pagination} from "@material-ui/lab";
-import {formatTime, toShortTimeString} from "../utils/time_format";
+import {formatTime, toShortTimeString} from "../../utils/time_format";
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 const useStyles = makeStyles(theme => createStyles({
@@ -248,15 +248,16 @@ export function ApplicationView<T extends IApplication>(props: ApplicationViewPr
                             onClick={() => props.onCancel(props.application.apply_id, handleReason)}>撤销</Button>
                 </ButtonGroup></div>
             </React.Fragment> : null}
-            {!props.canApprove && props.canCancel && props.application.status === ApplicationPending.code ? <React.Fragment>
-                <div style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                }}><ButtonGroup>
-                    <Button className={classes.cancelButton} variant="contained"
-                            onClick={() => props.onCancel(props.application.apply_id, handleReason)}>撤销</Button>
-                </ButtonGroup></div>
-            </React.Fragment> : null}
+            {!props.canApprove && props.canCancel && props.application.status === ApplicationPending.code ?
+                <React.Fragment>
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                    }}><ButtonGroup>
+                        <Button className={classes.cancelButton} variant="contained"
+                                onClick={() => props.onCancel(props.application.apply_id, handleReason)}>撤销</Button>
+                    </ButtonGroup></div>
+                </React.Fragment> : null}
             {props.children}
         </Collapse>
     </ListItem>
@@ -265,7 +266,7 @@ export function ApplicationView<T extends IApplication>(props: ApplicationViewPr
 
 const useApplicationPageStyles = makeStyles(theme => createStyles({
     paper: {
-        maxWidth: 960,
+        // maxWidth: 960,
         margin: 'auto',
         overflow: 'hidden',
     },
@@ -389,67 +390,70 @@ export function ApplicationViewPage<T extends IApplication>(props: {
 
     const actualList = applications === null ? null : applications.filter((value) => props.filter(filterString, value))
 
-    return <Paper className={classes.paper}>
-        <AppBar className={classes.searchBar} position="static" color="default" elevation={0}>
-            <Toolbar>
-                <Grid container spacing={2} alignItems="center">
-                    <Grid item>
-                        <SearchIcon className={classes.block} color="inherit"/>
+    return <Container maxWidth="lg">
+        <Paper className={classes.paper}>
+            <AppBar className={classes.searchBar} position="static" color="default" elevation={0}>
+                <Toolbar>
+                    <Grid container spacing={2} alignItems="center">
+                        <Grid item>
+                            <SearchIcon className={classes.block} color="inherit"/>
+                        </Grid>
+                        <Grid item xs>
+                            <TextField
+                                fullWidth
+                                placeholder={props.filterPlaceholder}
+                                InputProps={{
+                                    disableUnderline: true,
+                                    className: classes.searchInput,
+                                }}
+                                value={filterString}
+                                onChange={event => {
+                                    setFilterString(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Tooltip title="Reload">
+                                <IconButton onClick={triggerRefresh}>
+                                    <RefreshIcon className={classes.block} color="inherit"/>
+                                </IconButton>
+                            </Tooltip>
+                        </Grid>
                     </Grid>
-                    <Grid item xs>
-                        <TextField
-                            fullWidth
-                            placeholder={props.filterPlaceholder}
-                            InputProps={{
-                                disableUnderline: true,
-                                className: classes.searchInput,
-                            }}
-                            value={filterString}
-                            onChange={event => {
-                                setFilterString(event.target.value);
-                            }}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <Tooltip title="Reload">
-                            <IconButton onClick={triggerRefresh}>
-                                <RefreshIcon className={classes.block} color="inherit"/>
-                            </IconButton>
-                        </Tooltip>
-                    </Grid>
-                </Grid>
-            </Toolbar>
-        </AppBar>
-        {
-            (actualList === null || actualList.length === 0) ? (
-                <div className={classes.contentWrapper}>
-                    {errorMessage ? <Typography color="textSecondary" align="center">
-                        {errorMessage}
-                    </Typography> : <Typography color="textSecondary" align="center">
-                        {actualList === null ? "加载中" : "暂无申请"}
-                    </Typography>}
-                </div>
-            ) : (
-                <div className={classes.contentWrapperLight}><List>
-                    {actualList.slice(MaxDevicesPerPage * (page - 1), MaxDevicesPerPage * page).map((value, index) => (
-                        <React.Fragment key={index}>
-                            <ApplicationView application={value} applicationTitle={props.titleRenderer(value)}
-                                             canApprove={props.canApprove} canCancel={true} onApprove={handleApprove}
-                                             onReject={handleReject} onCancel={handleCancel}>
-                                {handleErrorMessage ? <Alert className={classes.marginTopBottom1}
-                                                             severity="error">{handleErrorMessage}</Alert> : null}
-                                {props.renderer(value)}
-                            </ApplicationView>
-                            <Divider className={classes.divider} component="li"/>
-                        </React.Fragment>
-                    ))}
-                </List>
-                    <Pagination style={{alignSelf: "center"}}
-                                page={page}
-                                onChange={(evt, page1) => setPage(page1)}
-                                count={Math.max(1, Math.ceil(actualList.length / MaxApplicationsPerPage))}/>
-                </div>
-            )
-        }
-    </Paper>
+                </Toolbar>
+            </AppBar>
+            {
+                (actualList === null || actualList.length === 0) ? (
+                    <div className={classes.contentWrapper}>
+                        {errorMessage ? <Typography color="textSecondary" align="center">
+                            {errorMessage}
+                        </Typography> : <Typography color="textSecondary" align="center">
+                            {actualList === null ? "加载中" : "暂无申请"}
+                        </Typography>}
+                    </div>
+                ) : (
+                    <div className={classes.contentWrapperLight}><List>
+                        {actualList.slice(MaxDevicesPerPage * (page - 1), MaxDevicesPerPage * page).map((value, index) => (
+                            <React.Fragment key={index}>
+                                <ApplicationView application={value} applicationTitle={props.titleRenderer(value)}
+                                                 canApprove={props.canApprove} canCancel={true}
+                                                 onApprove={handleApprove}
+                                                 onReject={handleReject} onCancel={handleCancel}>
+                                    {handleErrorMessage ? <Alert className={classes.marginTopBottom1}
+                                                                 severity="error">{handleErrorMessage}</Alert> : null}
+                                    {props.renderer(value)}
+                                </ApplicationView>
+                                <Divider className={classes.divider} component="li"/>
+                            </React.Fragment>
+                        ))}
+                    </List>
+                        <Pagination style={{alignSelf: "center"}}
+                                    page={page}
+                                    onChange={(evt, page1) => setPage(page1)}
+                                    count={Math.max(1, Math.ceil(actualList.length / MaxApplicationsPerPage))}/>
+                    </div>
+                )
+            }
+        </Paper>
+    </Container>;
 }

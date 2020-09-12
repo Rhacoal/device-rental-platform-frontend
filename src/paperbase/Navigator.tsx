@@ -40,6 +40,14 @@ const unloggedInCategories = [
 
 const categories = [
     {
+        id: '用户',
+        permission: ['borrower', 'admin', 'provider'],
+        children: [
+            {id: '我的个人信息', icon: <HomeIcon/>, link: LocalUrls.main_page, except: []},
+            {id: '恢复信用分', icon: <AddBoxIcon/>, link: LocalUrls.apply_credit, except: []},
+        ],
+    },
+    {
         id: '管理',
         permission: ['admin'],
         children: [
@@ -48,6 +56,7 @@ const categories = [
             {id: '提权申请处理', icon: <DoneAllIcon/>, link: LocalUrls.become_provider_admin, except: []},
             {id: '借用申请处理', icon: <DoneAllIcon/>, link: LocalUrls.borrow_handle_admin, except: []},
             {id: '上架申请处理', icon: <DoneAllIcon/>, link: LocalUrls.create_device_handle_admin, except: []},
+            {id: '信用分恢复申请处理', icon: <DoneAllIcon/>, link: LocalUrls.apply_credit_handle_admin, except: []},
             {id: '统计信息', icon: <PieChartIcon/>, link: LocalUrls.dashboard, except: []},
         ],
     },

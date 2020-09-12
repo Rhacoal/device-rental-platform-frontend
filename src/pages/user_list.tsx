@@ -30,8 +30,15 @@ import {Alert} from "@material-ui/lab";
 import {UserGroup, UserGroupName} from "../constants/group";
 import {formatTime} from '../utils/time_format';
 import {LocalUrls} from "../constants/local_urls";
+import Toolbar from "@material-ui/core/Toolbar";
+import Grid from "@material-ui/core/Grid";
+import SearchIcon from "@material-ui/icons/Search";
+import TextField from "@material-ui/core/TextField";
+import Tooltip from "@material-ui/core/Tooltip";
+import RefreshIcon from "@material-ui/icons/Refresh";
+import AppBar from "@material-ui/core/AppBar";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => createStyles({
     root: {
         width: '100%',
         overflow: "hidden",
@@ -40,7 +47,16 @@ const useStyles = makeStyles({
     container: {
         // maxHeight: "calc(100vh - 128px)",
     },
-});
+    searchBar: {
+        borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+    },
+    searchInput: {
+        fontSize: theme.typography.fontSize,
+    },
+    block: {
+        display: 'block',
+    },
+}));
 
 const useRowStyles = makeStyles(theme => createStyles({
     root: {
@@ -59,6 +75,7 @@ const useRowStyles = makeStyles(theme => createStyles({
         display: "flex",
         alignItems: "center",
         justifyContent: "flex-end",
+        flexWrap: "wrap",
         "& .MuiButton-root + .MuiButton-root": {
             marginLeft: theme.spacing(1),
         },
@@ -99,7 +116,10 @@ export function KeyValueView(props: {
 }
 
 
-function Row(props: { row: IUserInfo }) {
+function UserRow(props: {
+    row: IUserInfo,
+    onRefresh: () => unknown,
+}) {
     const {row} = props;
     const [open, setOpen] = React.useState(false);
     const classes = useRowStyles(useTheme());
@@ -124,14 +144,8 @@ function Row(props: { row: IUserInfo }) {
                     const value = row[column.id];
                     return (
                         <TableCell key={column.id} align={column.align}>
-                            {column.id === 'name' ? <Button component={Link} to={{
-                                pathname: LocalUrls.pm,
-                                state: {
-                                    userInfo: row,
-                                }
-                            }}>
-                                {row[column.id]}
-                            </Button> : (column.format ? column.format(value.toString()) : value)}
+                            {column.id === 'name' ?
+                                row[column.id] : (column.format ? column.format(value.toString()) : value)}
                         </TableCell>
                     );
                 })}
@@ -166,6 +180,7 @@ function Row(props: { row: IUserInfo }) {
                                     </Select>
                                 </FormControl>
                                 <Button variant="outlined"
+                                        color="primary"
                                         onClick={() => {
                                             setMessage("");
                                             userChangeGroup(row.user_id, newGroup).then((result) => {
@@ -179,6 +194,17 @@ function Row(props: { row: IUserInfo }) {
                                                 setMessage("删除失败: " + reason.toString());
                                             })
                                         }}>修改用户组</Button>
+                                <Button component={Link}
+                                        variant="outlined"
+                                        color="primary"
+                                        to={{
+                                            pathname: LocalUrls.pm,
+                                            state: {
+                                                userInfo: row,
+                                            }
+                                        }}>
+                                    发送消息
+                                </Button>
                                 <Button variant="outlined"
                                         color="secondary"
                                         onClick={() => {
@@ -186,6 +212,7 @@ function Row(props: { row: IUserInfo }) {
                                             userDelete(row.user_id).then((result) => {
                                                 if (result.success) {
                                                     setRefresh(!refresh);
+                                                    props.onRefresh();
                                                 } else {
                                                     setMessage("删除失败: " + result.message);
                                                 }
@@ -206,10 +233,12 @@ function Row(props: { row: IUserInfo }) {
 
 function UserList(props: {
     users: IUserInfo[],
+    onRefresh: () => unknown,
 }) {
-    const classes = useStyles();
+    const classes = useStyles(useTheme());
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [filterString, setFilterString] = React.useState("");
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -220,8 +249,45 @@ function UserList(props: {
         setPage(0);
     };
 
+    const actualList = props.users.filter((value) => {
+        if (filterString) {
+            return value.name.indexOf(filterString) !== -1;
+        }
+        return true;
+    })
+
     return (
         <Paper className={classes.root}>
+            <AppBar className={classes.searchBar} position="static" color="default" elevation={0}>
+                <Toolbar>
+                    <Grid container spacing={2} alignItems="center">
+                        <Grid item>
+                            <SearchIcon className={classes.block} color="inherit"/>
+                        </Grid>
+                        <Grid item xs>
+                            <TextField
+                                fullWidth
+                                placeholder="姓名"
+                                InputProps={{
+                                    disableUnderline: true,
+                                    className: classes.searchInput,
+                                }}
+                                value={filterString}
+                                onChange={event => {
+                                    setFilterString(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Tooltip title="Reload">
+                                <IconButton onClick={props.onRefresh}>
+                                    <RefreshIcon className={classes.block} color="inherit"/>
+                                </IconButton>
+                            </Tooltip>
+                        </Grid>
+                    </Grid>
+                </Toolbar>
+            </AppBar>
             <TableContainer className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
@@ -239,9 +305,12 @@ function UserList(props: {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {props.users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                        {actualList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
                             return (
-                                <Row row={row}/>
+                                <UserRow row={row} key={index}
+                                         onRefresh={() => {
+                                             props.onRefresh();
+                                         }}/>
                                 // <TableRow hover role="checkbox" tabIndex={-1} key={row.user_id}>
                                 //     {columns.map((column) => {
                                 //         const value = row[column.id];
@@ -260,7 +329,7 @@ function UserList(props: {
             <TablePagination
                 rowsPerPageOptions={[10, 25, 50]}
                 component="div"
-                count={props.users.length}
+                count={actualList.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
@@ -278,7 +347,6 @@ export function UserListPage(props: RouteComponentProps) {
 
     React.useEffect(() => {
         setErrorMessage(null);
-        setUsers([])
         userList().then((result) => {
             if (result.success) {
                 setErrorMessage(null);
@@ -293,6 +361,9 @@ export function UserListPage(props: RouteComponentProps) {
 
     return <Container>
         {errorMessage ? <Alert severity="error">{errorMessage}</Alert> : null}
-        <UserList users={users}/>
+        <UserList users={users}
+                  onRefresh={() => {
+                      setRefresh(!refresh);
+                  }}/>
     </Container>
 }

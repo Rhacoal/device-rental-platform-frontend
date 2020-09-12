@@ -4,7 +4,9 @@ import {RouteComponentProps} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
 import {IStore, UserInfoSlice} from "../store/store";
 import {makeStyles} from "@material-ui/core/styles";
-import {logout} from "../wrapper/requests";
+import {logout, selfUserInfo, updateUnreadCount} from "../wrapper/requests";
+import {CreditCircle} from "../components/credit_circle";
+import {KeyValueView} from "./user_list";
 
 const useStyles = makeStyles(theme => createStyles({
     container: {
@@ -12,10 +14,14 @@ const useStyles = makeStyles(theme => createStyles({
         flexDirection: "column",
         "& .MuiDivider-root": {
             backgroundColor: theme.palette.divider,
-        }
+        },
+        padding: theme.spacing(2, 2),
     },
     title: {
         margin: theme.spacing(1, 0),
+    },
+    margin1: {
+        margin: theme.spacing(2),
     },
     error: {
         color: theme.palette.error.contrastText,
@@ -23,10 +29,13 @@ const useStyles = makeStyles(theme => createStyles({
         '&:hover': {
             backgroundColor: theme.palette.error.dark,
         },
-    }
+    },
+    divider: {
+        color: theme.palette.divider,
+    },
 }));
 
-export function PendingLogin(props: {errorMessage: string}) {
+export function PendingLogin(props: { errorMessage: string }) {
     const classes = useStyles(useTheme());
     return <Container>
         <Typography variant="h4" component="h1" className={classes.title}>
@@ -58,6 +67,7 @@ export function PendingLogin(props: {errorMessage: string}) {
 export function Profile(props: RouteComponentProps) {
     const classes = useStyles(useTheme());
     const userInfo = useSelector((store: IStore) => store.user.userInfo);
+    const [errorMessage, setErrorMessage] = React.useState("");
     const dispatch = useDispatch();
     const handleLogout = () => {
         logout().then((result) => {
@@ -67,20 +77,44 @@ export function Profile(props: RouteComponentProps) {
         })
     }
 
-    return <Container className={classes.container}>
+    React.useEffect(() => {
+        selfUserInfo().then((result) => {
+            if (result.success) {
+                dispatch(UserInfoSlice.actions.setUserInfo(result.data));
+            } else {
+                setErrorMessage(result.message);
+            }
+        }, reason => {
+            setErrorMessage(reason.toString());
+        })
+    }, [])
+
+    return <Container maxWidth="md">
+        <Paper className={classes.container}>
             {userInfo ? <React.Fragment>
-                <Typography variant="h4" component="h1" className={classes.title}>
+                <Typography variant="h5" component="h1" className={classes.title}>
                     欢迎回来，{userInfo.name}！
                 </Typography>
                 <Divider/>
-                <Typography variant="body1">
-                    {userInfo.student_id}
-                </Typography>
+                <KeyValueView keyString={"ID"} value={userInfo.student_id}/>
+                <KeyValueView keyString={"邮箱"} value={userInfo.email}/>
+                <div style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }} className={classes.margin1}>
+                    <CreditCircle value={userInfo.credit_score}/>
+                    <Typography component="div" className={classes.margin1} variant="h6" style={{maxWidth: "200px"}}>
+                        {userInfo.credit_score >= 60 ? "您的信用状态良好！" : "您的信用状态不佳，可能影响功能使用，可以向管理员申请恢复信用分"}
+                    </Typography>
+                </div>
                 <Button style={{alignSelf: "flex-end"}} variant="outlined" color="secondary" onClick={handleLogout}>
                     登出
                 </Button>
             </React.Fragment> : <React.Fragment>
                 <Typography variant="h6" component="div">用户信息正在加载中</Typography>
             </React.Fragment>}
+        </Paper>
     </Container>
 }

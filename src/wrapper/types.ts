@@ -7,6 +7,11 @@ export interface IUserInfo {
     "email": string,
     "register_time": number,
     "group": UserGroup,
+    "credit_score": number,
+}
+
+export interface IMetaHeaders {
+    address?: string,
 }
 
 export interface IDevice {
@@ -18,6 +23,8 @@ export interface IDevice {
     "owner": IUserInfo,
     "created_time": number,
     "return_time": null | number,
+    "meta_header": null | string,
+    "meta": IMetaHeaders,
 }
 
 export interface IComment {
@@ -44,6 +51,10 @@ export interface IDeviceBorrowApplication extends IApplication {
     "return_time": number,
 }
 
+export interface ICreditApplication extends IApplication {
+    "reason": string,
+}
+
 export interface IPermissionApplication extends IApplication {
     "group": string,
     "reason": string,
@@ -52,6 +63,7 @@ export interface IPermissionApplication extends IApplication {
 export interface ICreateDeviceApplication extends IApplication {
     "device_name": string,
     "device_description": string,
+    "meta_header": string | null,
 }
 
 export interface IPrivateMessage {

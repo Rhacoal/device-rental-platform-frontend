@@ -1,11 +1,12 @@
 import React from "react";
-import {IDeviceBorrowApplication} from "../wrapper/types";
-import {applyBorrowDeviceAPIs, deviceList, Result} from "../wrapper/requests";
+import {IDeviceBorrowApplication} from "../../wrapper/types";
+import {applyBorrowDeviceAPIs, deviceList, Result} from "../../wrapper/requests";
 import {RouteComponentProps} from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import {ApplicationViewPage} from "./application_admin";
-import {KeyValueView} from "./user_list";
-import {VerticalSpacer} from "../components/vertical_spacer";
+import {KeyValueView} from "../user_list";
+import {VerticalSpacer} from "../../components/vertical_spacer";
+import {formatTime} from "../../utils/time_format";
 
 const deviceBorrowApplicationPageProps = {
     apiRoot: applyBorrowDeviceAPIs,
@@ -38,6 +39,8 @@ const deviceBorrowApplicationPageProps = {
                           value={value.applicant.student_id}/>
             <KeyValueView keyString={"邮箱"}
                           value={value.applicant.email}/>
+            <KeyValueView keyString={"归还时间"}
+                          value={formatTime(value.return_time)}/>
             <VerticalSpacer />
             <KeyValueView keyString={"设备提供者"} value={value.device.owner.name}/>
             <KeyValueView keyString={"设备信息"} value={value.device.description}/>

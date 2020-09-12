@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => createStyles({
     }
 }));
 
-export function ApplicationStatus(props: {
+export function ApplicationStatistics(props: {
     dashboard: IDashboard
     className: string
 } & any) {

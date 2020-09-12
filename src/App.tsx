@@ -15,21 +15,22 @@ import {DeviceListPage} from "./pages/device_list";
 import {
     DeviceBorrowApplicationAdminPage,
     DeviceBorrowApplicationProviderPage, DeviceBorrowApplicationSelfPage
-} from "./pages/device_borrow_application_management";
+} from "./pages/applications/device_borrow_application";
 import {canUpdateUnreadCount, selfUserInfo, updateUnreadCount, userInfo} from "./wrapper/requests";
 import {PendingLogin, Profile} from "./pages/profile";
 import {UserListPage} from "./pages/user_list";
-import {PermissionApplicationAdminPage, PermissionApplicationSelfPage} from "./pages/permission_application_management";
+import {PermissionApplicationAdminPage, PermissionApplicationSelfPage} from "./pages/applications/permission_application";
 import {
     DeviceCreateApplicationAdminPage,
     DeviceCreateApplicationProviderPage
-} from "./pages/device_create_application_management";
+} from "./pages/applications/device_create_application";
 import {DeviceListProviderPage, DeviceListSelfPage} from "./pages/device_list_provider";
 import {Copyright} from "./components/copyrights";
 import {DeviceListAdminPage} from "./pages/device_list_admin";
 import {DashboardPage} from "./pages/dashboard/dashboard";
 import {PMListPage} from "./pages/private_message_page";
 import {SubDirectory} from "./wrapper/urls";
+import {CreditApplicationAdminPage, CreditApplicationSelfPage} from "./pages/applications/credit_application";
 
 
 let theme = createMuiTheme({
@@ -183,15 +184,12 @@ function UserInfoComponent(props: RouteComponentProps) {
             if (!user.userInfo) {
                 selfUserInfo().then((result) => {
                     if (result.success) {
-                        canUpdateUnreadCount.value = true;
                         updateUnreadCount();
                         dispatch(UserInfoSlice.actions.setUserInfo(result.data));
                     } else {
-                        canUpdateUnreadCount.value = false;
                         setErrorMessage(result.message);
                     }
                 }, reason => {
-                    canUpdateUnreadCount.value = true;
                     setErrorMessage(reason.toString());
                 })
             }
@@ -205,12 +203,14 @@ function UserInfoComponent(props: RouteComponentProps) {
         <Route path={LocalUrls.main_page} component={Profile}/>
         <Route path={LocalUrls.user_info} component={Profile}/>
         <Route path={LocalUrls.devices} component={DeviceListPage}/>
+        <Route path={LocalUrls.apply_credit} component={CreditApplicationSelfPage}/>
         {/* 管理员页面 */}
         <Route path={LocalUrls.user_admin} component={UserListPage}/>
         <Route path={LocalUrls.device_admin} component={DeviceListAdminPage}/>
         <Route path={LocalUrls.borrow_handle_admin} component={DeviceBorrowApplicationAdminPage}/>
         <Route path={LocalUrls.become_provider_admin} component={PermissionApplicationAdminPage}/>
         <Route path={LocalUrls.create_device_handle_admin} component={DeviceCreateApplicationAdminPage}/>
+        <Route path={LocalUrls.apply_credit_handle_admin} component={CreditApplicationAdminPage}/>
         <Route path={LocalUrls.dashboard} component={DashboardPage}/>
         {/* 设备提供者页面 */}
         <Route path={LocalUrls.devices_provider} component={DeviceListProviderPage}/>

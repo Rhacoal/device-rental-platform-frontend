@@ -17,7 +17,7 @@ import {
     applyBorrowDevice,
     applyBorrowDeviceAPIs,
     commentDelete,
-    commentList, commentSend,
+    commentList, commentSend, deviceDelete,
     deviceDetail,
     deviceEdit, returnDevice
 } from "../wrapper/requests";
@@ -28,7 +28,10 @@ import DateFnsUtils from '@date-io/date-fns';
 import {Alert, Pagination} from "@material-ui/lab";
 import {formatTime} from "../utils/time_format";
 import {MaxCommentsPerPage} from "../constants/constants";
-import {DeviceDescription, DeviceDescriptionSplitter} from "../utils/device_description_renderer";
+import {DeviceDetailRenderer, DeviceDescriptionSplitter} from "../utils/device_description_renderer";
+import {MetaKeyDescription} from "../constants/meta_header_keys";
+import {Link} from "react-router-dom";
+import {LocalUrls} from "../constants/local_urls";
 
 const useStyles = makeStyles(theme => createStyles({
     margin1: {
@@ -162,7 +165,6 @@ export function DeviceDetailSubPage(props: {
     deviceDetail: IDevice,
     showBorrowButton: boolean,
     showEditButton: boolean,
-    showDeleteButton: boolean,
     showReturnButton: boolean,
     onEdit?: () => unknown,
 }) {
@@ -172,19 +174,21 @@ export function DeviceDetailSubPage(props: {
     const [submitting, setSubmitting] = React.useState(false);
     const [succeeded, setSucceeded] = React.useState(false);
     const [commentOpen, setCommentOpen] = React.useState(false);
-
+    // 修改
     const [submitting2, setSubmitting2] = React.useState(false);
     const [succeeded2, setSucceeded2] = React.useState(false);
-
+    // 返还
     const [submitting3, setSubmitting3] = React.useState(false);
     const [succeeded3, setSucceeded3] = React.useState(false);
+    // 删除
+    const [submitting4, setSubmitting4] = React.useState(false);
+    const [succeeded4, setSucceeded4] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState("");
     const [date, setDate] = React.useState(new Date() as Date | null);
     const [editMode, setEditMode] = React.useState(false);
     const [newTitle, setNewTitle] = React.useState(props.deviceDetail.name);
-    const {address, description} = DeviceDescriptionSplitter(props.deviceDetail.description);
-    const [newAddress, setNewAddress] = React.useState(address);
-    const [newContent, setNewContent] = React.useState(description);
+    const [newAddress, setNewAddress] = React.useState(props.deviceDetail.meta.address || "");
+    const [newContent, setNewContent] = React.useState(props.deviceDetail.description);
 
     const handleSubmit = () => {
         if (submitting || succeeded || date === null) {
@@ -210,8 +214,8 @@ export function DeviceDetailSubPage(props: {
         if (!editMode) {
             setEditMode(true);
             setNewTitle(props.deviceDetail.name);
-            setNewAddress(address);
-            setNewContent(description);
+            setNewAddress(props.deviceDetail.meta.address || "");
+            setNewContent(props.deviceDetail.description);
         }
     }
 
@@ -224,14 +228,13 @@ export function DeviceDetailSubPage(props: {
             return;
         }
         setSubmitting2(true);
-        const content1 = `<address:${newAddress}>${newContent}`;
-        deviceEdit(props.deviceDetail.device_id, newTitle, content1).then((result) => {
+        const content1 = `${newContent}`;
+        deviceEdit(props.deviceDetail.device_id, newTitle, content1, {address: newAddress}).then((result) => {
             if (result.success) {
                 setSucceeded2(true);
                 setSubmitting2(false);
                 props.deviceDetail.name = newTitle;
                 props.deviceDetail.description = content1;
-                cancelEditMode();
             } else {
                 setSucceeded2(false);
                 setSubmitting2(false);
@@ -239,6 +242,26 @@ export function DeviceDetailSubPage(props: {
             }
         }, reason1 => {
             setSubmitting2(false);
+            setErrorMessage(reason1.toString());
+        });
+    }
+
+    const handleDelete = () => {
+        if (submitting4 || succeeded4) {
+            return;
+        }
+        setSubmitting4(true);
+        deviceDelete(props.deviceDetail.device_id).then((result) => {
+            if (result.success) {
+                setSucceeded4(true);
+                setSubmitting4(false);
+            } else {
+                setSucceeded4(false);
+                setSubmitting4(false);
+                setErrorMessage(result.message);
+            }
+        }, reason1 => {
+            setSubmitting4(false);
             setErrorMessage(reason1.toString());
         });
     }
@@ -279,6 +302,7 @@ export function DeviceDetailSubPage(props: {
         if (succeeded2) {
             const timer = setTimeout(() => {
                 setSucceeded2(false);
+                cancelEditMode();
                 if (props.onEdit) props.onEdit();
             }, 500);
             return () => {
@@ -299,6 +323,18 @@ export function DeviceDetailSubPage(props: {
         }
     }, [succeeded3]);
 
+    React.useEffect(() => {
+        if (succeeded4) {
+            const timer = setTimeout(() => {
+                setSucceeded4(false);
+                if (props.onEdit) props.onEdit();
+            }, 500);
+            return () => {
+                clearTimeout(timer);
+            }
+        }
+    }, [succeeded4]);
+
     return <div className={classes.root}>
         <Typography variant="h6" component="h1" className={classes.title}>
             {editMode ?
@@ -315,31 +351,49 @@ export function DeviceDetailSubPage(props: {
                                     component="span">(ID:{' '}{props.deviceDetail.device_id})</Typography>
                 </span>
             }
-            {props.showBorrowButton ? <Button variant={"outlined"}
-                                              color="primary"
-                                              className={classes.margin1}
-                                              disabled={props.deviceDetail.borrower !== null}
-                                              onClick={() => setApplyOpen(!applyOpen)}>
-                申请借用
-            </Button> : null}
+            {props.showBorrowButton ? <ButtonGroup>
+                <Button variant={"outlined"}
+                        color="primary"
+                        disabled={props.deviceDetail.borrower !== null}
+                        onClick={() => setApplyOpen(!applyOpen)}>
+                    申请借用
+                </Button>
+                <Button variant={"outlined"}
+                        color="primary"
+                        component={Link}
+                        to={{
+                            pathname: LocalUrls.pm,
+                            state: {
+                                userInfo: props.deviceDetail.owner,
+                            },
+                        }}>
+                    联系提供者
+                </Button>
+            </ButtonGroup>: null}
             {props.showEditButton ? (
                 editMode ?
                     <ButtonGroup style={{whiteSpace: "nowrap"}}>
                         <Button color={submitting2 ? "default" : "primary"} variant="outlined"
                                 className={clsx(succeeded2 && classes.success)}
                                 onClick={handleEdit}>
-                            确定
+                            {succeeded2 ? "已编辑" : "确定"}
                         </Button>
                         <Button variant={"outlined"}
-                                color="secondary"
+                                color="default"
                                 onClick={cancelEditMode}>
                             取消
                         </Button>
                     </ButtonGroup> :
-                    <Button variant={"outlined"}
-                            color="primary"
-                            className={classes.margin1}
-                            onClick={enableEditMode}>编辑</Button>
+                    <div>
+                        <ButtonGroup>
+                            <Button variant={"outlined"}
+                                    color="primary"
+                                    onClick={enableEditMode}>编辑</Button>
+                            <Button variant={succeeded4 ? "contained" : "outlined"}
+                                    color="secondary"
+                                    onClick={handleDelete}>{succeeded4 ? "已删除" : "删除"}</Button>
+                        </ButtonGroup>
+                    </div>
             ) : null}
             {props.showReturnButton ? (
                 <Button variant={"outlined"}
@@ -380,36 +434,31 @@ export function DeviceDetailSubPage(props: {
                 </Button>
             </div>
         </Collapse> : null}
-        <Typography variant="body2" color="textSecondary">
-            由 {props.deviceDetail.owner.name} 提供
-        </Typography>
         {editMode ?
             <React.Fragment>
                 <TextField fullWidth
-                           label="地址"
-                           variant="filled"
+                           label={MetaKeyDescription.address}
+                           variant="outlined"
                            value={newAddress}
                            onChange={(evt) => {
                                setNewAddress(evt.target.value);
                            }}
+                           className={classes.marginTopBottom1}
                 />
                 <TextField fullWidth
                            value={newContent}
                            multiline
-                           variant="filled"
+                           variant="outlined"
                            rows={10}
                            label="设备详情"
                            onChange={(evt) => {
                                setNewContent(evt.target.value);
                            }}
-                           style={{
-                               marginTop: 8,
-                           }}
+                           className={classes.marginTopBottom1}
                 />
             </React.Fragment>
-            : <Typography variant="body1">
-                <DeviceDescription value={props.deviceDetail.description}/>
-            </Typography>
+            : <DeviceDetailRenderer description={props.deviceDetail.description}
+                                    meta={props.deviceDetail.meta}/>
         }
         <Button fullWidth
                 variant="outlined"

@@ -1,5 +1,5 @@
-import {applyBorrowDeviceAPIs, applyCreateDevice, applyCreateDeviceAPIs} from "../wrapper/requests";
-import {ICreateDeviceApplication, IDeviceBorrowApplication} from "../wrapper/types";
+import {applyBorrowDeviceAPIs, applyCreateDevice, applyCreateDeviceAPIs} from "../../wrapper/requests";
+import {ICreateDeviceApplication, IDeviceBorrowApplication} from "../../wrapper/types";
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import {RouteComponentProps} from "react-router-dom";
@@ -18,10 +18,11 @@ import {
 import {Edit} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import {Alert} from "@material-ui/lab";
-import {KeyValueView} from "./user_list";
-import {Urls} from "../wrapper/urls";
-import {VerticalSpacer} from "../components/vertical_spacer";
-import {DeviceDescription} from "../utils/device_description_renderer";
+import {KeyValueView} from "../user_list";
+import {Urls} from "../../wrapper/urls";
+import {VerticalSpacer} from "../../components/vertical_spacer";
+import {DeviceDetailRenderer} from "../../utils/device_description_renderer";
+import {MetaKeyDescription} from "../../constants/meta_header_keys";
 
 const deviceCreateApplicationProps = {
     apiRoot: applyCreateDeviceAPIs,
@@ -55,8 +56,9 @@ const deviceCreateApplicationProps = {
             <VerticalSpacer/>
             <KeyValueView keyString={"设备名称"}
                           value={value.device_name}/>
-            <KeyValueView keyString={"设备信息"} value={""}/>
-            <DeviceDescription value={value.device_description}/>
+            <KeyValueView keyString={MetaKeyDescription.address}
+                          value={value.meta_header ? ((JSON.parse(value.meta_header) || {}).address || "") : ""}/>
+            <KeyValueView keyString={"描述"} value={value.device_description}/>
         </React.Fragment>
     },
     titleRenderer: (value: ICreateDeviceApplication) => {
@@ -85,10 +87,6 @@ const useStyles = makeStyles(theme => createStyles({
     container: {
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
-        padding: 0,
-        // display: "flex",
-        // flexDirection: "column",
-        // alignItems: "stretch",
         "& .MuiButtonGroup-root": {
             alignSelf: "flex-end",
         },
@@ -117,24 +115,24 @@ export function DeviceCreateApplicationProviderPage(props: RouteComponentProps) 
         }
         setInSubmit(true);
         setErrorMessage("");
-        applyCreateDevice(deviceName, `<address:${deviceAddress}>${deviceDescription}`)
+        applyCreateDevice(deviceName, deviceDescription, {address: deviceAddress})
             .then((result) => {
-            setInSubmit(false);
-            if (result.success) {
-                setRefresh(!refresh);
-                setOpen(false);
-                setSnackOpen(true);
-            } else {
-                setErrorMessage(result.message);
-            }
-        }, (reason) => {
-            setInSubmit(false);
-            setErrorMessage(reason.toString());
-        })
+                setInSubmit(false);
+                if (result.success) {
+                    setRefresh(!refresh);
+                    setOpen(false);
+                    setSnackOpen(true);
+                } else {
+                    setErrorMessage(result.message);
+                }
+            }, (reason) => {
+                setInSubmit(false);
+                setErrorMessage(reason.toString());
+            })
     }
 
     return <React.Fragment>
-        <Container maxWidth="md" className={classes.container}>
+        <Container maxWidth="lg" className={classes.container}>
             <Snackbar open={snackOpen} autoHideDuration={6000} onClose={() => setSnackOpen(false)}>
                 <Alert onClose={() => setSnackOpen(false)} severity="success">
                     申请成功
@@ -160,7 +158,7 @@ export function DeviceCreateApplicationProviderPage(props: RouteComponentProps) 
                                    setDeviceName(event.target.value);
                                }}
                     />
-                    <TextField label="地址"
+                    <TextField label={MetaKeyDescription.address}
                                variant="outlined"
                                onChange={(event) => {
                                    setDeviceAddress(event.target.value);

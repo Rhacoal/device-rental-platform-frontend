@@ -1,13 +1,8 @@
-import {
-    applyBecomeProvider,
-    applyBecomeProviderAPIs,
-    applyBorrowDeviceAPIs,
-    applyCreateDevice,
-    applyCreateDeviceAPIs
-} from "../wrapper/requests";
-import {IPermissionApplication} from "../wrapper/types";
+import {applyCredit, applyCreditAPIs} from "../../wrapper/requests";
+import {ICreditApplication} from "../../wrapper/types";
 import React from "react";
-import Typography from "@material-ui/core/Typography";
+import {KeyValueView} from "../user_list";
+import {VerticalSpacer} from "../../components/vertical_spacer";
 import {RouteComponentProps} from "react-router-dom";
 import {ApplicationViewPage} from "./application_admin";
 import {
@@ -22,24 +17,24 @@ import {
     useTheme
 } from "@material-ui/core";
 import {Alert} from "@material-ui/lab";
-import {Edit} from "@material-ui/icons";
+import Typography from "@material-ui/core/Typography";
+import {Edit, Replay} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
-import {KeyValueView} from "./user_list";
-import {VerticalSpacer} from "../components/vertical_spacer";
 
-const permissionApplicationProps = {
-    apiRoot: applyBecomeProviderAPIs,
-    filter: (filterString: string, value: IPermissionApplication) => {
+const creditApplicationPageProps = {
+    apiRoot: applyCreditAPIs,
+    filter: (filterString: string, value: ICreditApplication) => {
         if (filterString) {
             return (
-                value.applicant.student_id.toString().indexOf(filterString) !== -1
-                || value.applicant.name.indexOf(filterString) !== -1
+                value.applicant.name.indexOf(filterString) !== -1
+                || value.applicant.email.indexOf(filterString) !== -1
+                || value.applicant.student_id.toString().indexOf(filterString) !== -1
             )
         }
         return true;
     },
-    filterPlaceholder: "姓名/学号",
-    renderer: (value: IPermissionApplication) => {
+    filterPlaceholder: "申请者姓名/学号/邮箱",
+    renderer: (value: ICreditApplication) => {
         return <React.Fragment>
             {value.handler ? <React.Fragment>
                 <KeyValueView keyString={"处理人"}
@@ -50,21 +45,25 @@ const permissionApplicationProps = {
                               value={value.handle_reason || "无"}/>
                 <VerticalSpacer />
             </React.Fragment> : null}
+            <KeyValueView keyString={"申请理由"}
+                          value={value.reason}/>
+            <KeyValueView keyString={"申请人"}
+                          value={value.applicant.name}/>
             <KeyValueView keyString={"学号"}
                           value={value.applicant.student_id}/>
             <KeyValueView keyString={"邮箱"}
                           value={value.applicant.email}/>
-            <KeyValueView keyString={"申请原因"}
-                          value={value.reason}/>
+            <VerticalSpacer />
+
         </React.Fragment>
     },
-    titleRenderer: (value: IPermissionApplication) => {
+    titleRenderer: (value: ICreditApplication) => {
         return `${value.applicant.name} 的申请`;
     }
 }
 
-export function PermissionApplicationAdminPage(props: RouteComponentProps) {
-    return <ApplicationViewPage {...permissionApplicationProps} role="admin" canApprove={true}/>
+export function CreditApplicationAdminPage(props: RouteComponentProps) {
+    return <ApplicationViewPage {...creditApplicationPageProps} role="admin" canApprove={true}/>
 }
 
 
@@ -85,10 +84,6 @@ const useStyles = makeStyles(theme => createStyles({
     container: {
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
-        padding: 0,
-        // display: "flex",
-        // flexDirection: "column",
-        // alignItems: "stretch",
         "& .MuiButtonGroup-root": {
             alignSelf: "flex-end",
         },
@@ -100,10 +95,10 @@ const useStyles = makeStyles(theme => createStyles({
     },
 }))
 
-export function PermissionApplicationSelfPage(props: RouteComponentProps) {
+export function CreditApplicationSelfPage(props: RouteComponentProps) {
     const classes = useStyles(useTheme());
     const [open, setOpen] = React.useState(false);
-    const [applicationReason, setApplicationReason] = React.useState("");
+    const [applyReason, setApplyReason] = React.useState("");
     const [refresh, setRefresh] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState("");
     const [inSubmit, setInSubmit] = React.useState(false);
@@ -115,61 +110,70 @@ export function PermissionApplicationSelfPage(props: RouteComponentProps) {
         }
         setInSubmit(true);
         setErrorMessage("");
-        applyBecomeProvider(applicationReason).then((result) => {
-            setInSubmit(false);
-            if (result.success) {
-                setRefresh(!refresh);
-                setOpen(false);
-                setSnackOpen(true);
-            } else {
-                setErrorMessage(result.message);
-            }
-        }, (reason) => {
-            setInSubmit(false);
-            setErrorMessage(reason.toString());
-        })
+        applyCredit(applyReason)
+            .then((result) => {
+                setInSubmit(false);
+                if (result.success) {
+                    setRefresh(!refresh);
+                    setOpen(false);
+                    setSnackOpen(true);
+                } else {
+                    setErrorMessage(result.message);
+                }
+            }, (reason) => {
+                setInSubmit(false);
+                setErrorMessage(reason.toString());
+            })
     }
 
     return <React.Fragment>
-        <Container maxWidth="md" className={classes.container}>
+        <Container maxWidth="lg" className={classes.container}>
             <Snackbar open={snackOpen} autoHideDuration={6000} onClose={() => setSnackOpen(false)}>
                 <Alert onClose={() => setSnackOpen(false)} severity="success">
                     申请成功
                 </Alert>
             </Snackbar>
             <div className="title">
-                <Typography variant="h5" component="span">成为设备提供者申请</Typography>
+                <Typography variant="h5" component="span">信用分恢复</Typography>
                 <ButtonGroup component="span">
-                    <Button variant="contained" onClick={() => {
+                    <Button variant={open ? "outlined" : "contained"} onClick={() => {
                         setOpen(true);
+                        setApplyReason("");
                     }}
                             color="primary">
-                        <Edit/>
-                        申请
+                        <Replay/>
+                        申请恢复信用分
                     </Button>
                 </ButtonGroup>
             </div>
             <Collapse in={open}>
                 <Paper className={classes.paper}>
-                    <TextField multiline
-                               rows={10}
-                               label="申请理由"
+                    <TextField label="申请理由"
+                               multiline
+                               rows={3}
                                variant="outlined"
                                onChange={(event) => {
-                                   setApplicationReason(event.target.value)
+                                   setApplyReason(event.target.value);
                                }}
                     />
-                    <Button color="primary"
-                            variant="outlined"
-                            onClick={handleSubmitApplication}>
-                        提交申请
-                    </Button>
+                    <ButtonGroup>
+                        <Button color="primary"
+                                variant="contained"
+                                onClick={handleSubmitApplication}>
+                            提交申请
+                        </Button>
+                        <Button color="default"
+                                variant="contained"
+                                onClick={() => setOpen(false)}>
+                            取消
+                        </Button>
+                    </ButtonGroup>
                     {errorMessage ? <Alert severity="error">
                         {errorMessage}
                     </Alert> : null}
                 </Paper>
             </Collapse>
         </Container>
-        <ApplicationViewPage {...permissionApplicationProps} role="self" canApprove={false} refresh={refresh}/>
-    </React.Fragment>;
+        <ApplicationViewPage {...creditApplicationPageProps} role="self" canApprove={false} refresh={refresh}/>
+    </React.Fragment>
 }

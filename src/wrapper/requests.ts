@@ -1,9 +1,9 @@
 import {
     IApplication,
     IComment,
-    ICreateDeviceApplication,
+    ICreateDeviceApplication, ICreditApplication,
     IDevice,
-    IDeviceBorrowApplication,
+    IDeviceBorrowApplication, IMetaHeaders,
     IPermissionApplication, IPrivateMessageReceived, IPrivateMessageSendReceiveList, IPrivateMessageSent,
     IUserInfo, PMType
 } from "./types";
@@ -78,6 +78,22 @@ async function doAuthenticatedRequest<Req, Resp>(method: string, url: string, pa
         invalidateLogin();
     }
     return await createResultFromJsonResponse<Resp>(response, json => resp_map(json));
+}
+
+function analyzeMetaHeader(device: IDevice): IDevice {
+    const header = device.meta_header;
+    if (header) {
+        let obj = JSON.parse(header);
+        device.meta = obj || {};
+    } else {
+        device.meta = {};
+    }
+    return device;
+}
+
+function analyzeDeviceListMetaHeader(devices: IDevice[]): IDevice[] {
+    devices.forEach(analyzeMetaHeader);
+    return devices;
 }
 
 /**
@@ -232,14 +248,14 @@ export const deviceList = async (params: {
     owner_id?: number,
     borrower_id?: number,
 }) =>
-    await doAuthenticatedRequest<typeof params, IDevice[]>("GET", Urls.device_list, params, json => json.devices);
+    await doAuthenticatedRequest<typeof params, IDevice[]>("GET", Urls.device_list, params, json => analyzeDeviceListMetaHeader(json.devices));
 
 /**
  * 获取设备详情.
  * @param deviceId 设备 ID
  */
 export const deviceDetail = async (deviceId: number) =>
-    await doAuthenticatedRequest<null, IDevice>("GET", Urls.device_detail(deviceId), null, json => json.device);
+    await doAuthenticatedRequest<null, IDevice>("GET", Urls.device_detail(deviceId), null, json => analyzeMetaHeader(json.device));
 
 
 /**
@@ -255,11 +271,13 @@ export const returnDevice = async (deviceId: number) =>
  * @param deviceId 设备 ID
  * @param newName 新的名称
  * @param newDescription 新的描述
+ * @param meta 元数据
  */
-export const deviceEdit = async (deviceId: number, newName: string | null, newDescription: string | null) =>
+export const deviceEdit = async (deviceId: number, newName: string | null, newDescription: string | null, meta: IMetaHeaders) =>
     await doAuthenticatedRequest("PATCH", Urls.device_detail(deviceId), {
         "name": newName,
-        "description": newDescription
+        "description": newDescription,
+        "meta_header": JSON.stringify(meta),
     }, json => null);
 
 /**
@@ -274,7 +292,7 @@ export const deviceDelete = async (deviceId: number) =>
  * @param userId 用户 ID
  */
 export const borrowedDevices = async (userId: number) =>
-    await doAuthenticatedRequest<null, IDevice[]>("GET", Urls.device_borrowed_list(userId), null, json => json.devices);
+    await doAuthenticatedRequest<null, IDevice[]>("GET", Urls.device_borrowed_list(userId), null, json => analyzeDeviceListMetaHeader(json.devices));
 
 /*
     评论相关的 API
@@ -354,7 +372,6 @@ export const applyBorrowDevice = async (deviceId: number, reason: string, return
 
 /**
  * 申请成为提供者.
- * @param group 新的用户组
  * @param reason 理由
  * @return 申请 ID
  */
@@ -368,17 +385,30 @@ export const applyBecomeProvider = async (reason: string) =>
  * 申请上架设备.
  * @param device_name 设备名称
  * @param device_description 设备描述
+ * @param meta_headers 元数据
  * @return 申请 ID
  */
-export const applyCreateDevice = async (device_name: string, device_description: string) =>
+export const applyCreateDevice = async (device_name: string, device_description: string, meta_headers: IMetaHeaders) =>
     await doAuthenticatedRequest("POST", Urls.apply_create_device.baseUrl, {
         device_name,
-        device_description
+        device_description,
+        meta_header: JSON.stringify(meta_headers),
+    }, json => json.apply_id as number);
+
+/**
+ * 申请恢复信用分.
+ * @param reason 理由
+ * @return 申请 ID
+ */
+export const applyCredit = async (reason: string) =>
+    await doAuthenticatedRequest("POST", Urls.apply_credit.baseUrl, {
+        reason
     }, json => json.apply_id as number);
 
 export const applyBorrowDeviceAPIs = createApplicationFunctions<IDeviceBorrowApplication>(Urls.apply_borrow_device);
 export const applyBecomeProviderAPIs = createApplicationFunctions<IPermissionApplication>(Urls.apply_become_provider);
 export const applyCreateDeviceAPIs = createApplicationFunctions<ICreateDeviceApplication>(Urls.apply_create_device);
+export const applyCreditAPIs = createApplicationFunctions<ICreditApplication>(Urls.apply_credit);
 
 /**
  * Dashboard.
@@ -455,10 +485,9 @@ let inProgress = false;
  * 更新未读数量.
  */
 export const updateUnreadCount = () => {
-    if (!canUpdateUnreadCount.value || inProgress) {
+    if (inProgress || !store.getState().user.loggedIn) {
         return;
     }
-    inProgress = true;
     pmUnreadCount().then((result) => {
         inProgress = false;
         if (result.success) {

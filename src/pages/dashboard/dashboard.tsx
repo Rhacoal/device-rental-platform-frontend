@@ -17,7 +17,7 @@ import {
 } from "@material-ui/core";
 import {Alert, Skeleton} from "@material-ui/lab";
 import {DeviceUsageView} from "./device_usage";
-import {ApplicationStatus} from "./application_status";
+import {ApplicationStatistics} from "./application_status";
 import {BorrowThisMonth} from "./borrow_this_month";
 import {makeStyles} from "@material-ui/core/styles";
 import {UserCount} from "./user_count";
@@ -35,7 +35,7 @@ function DashboardView(props: {
                     <DeviceUsageView dashboard={dashboard} className={""}/>
                 </Grid>
                 <Grid item lg={4} md={6} xs={12}>
-                    <ApplicationStatus dashboard={dashboard} className={""}/>
+                    <ApplicationStatistics dashboard={dashboard} className={""}/>
                 </Grid>
                 <Grid item lg={4} md={12} xs={12} container>
                     <Grid item xs={12} style={{height: "min-content"}}>

@@ -60,4 +60,7 @@ export const Urls = {
 
     // 设备上架申请
     "apply_create_device": new ApplicationUrl(`${UrlPrefix}/apply/new-device`),
+
+    // 信用分恢复申请
+    "apply_credit": new ApplicationUrl(`${UrlPrefix}/apply/recover-credit`),
 }

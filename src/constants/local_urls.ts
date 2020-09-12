@@ -12,6 +12,8 @@ export const LocalUrls = {
     "apply_borrow": "/borrow-device",
     "become_provider": "/become-provider",
 
+    "apply_credit": "/recover-credit",
+
     "pm": "/pm",
 
     // 管理
@@ -20,6 +22,7 @@ export const LocalUrls = {
     "become_provider_admin": "/admin/become-provider",
     "borrow_handle_admin": "/admin/borrow",
     "create_device_handle_admin": "/admin/create-device",
+    "apply_credit_handle_admin": "/admin/recover-credit",
     "dashboard": "/admin/dashboard",
 
     // 设备管理

@@ -12,8 +12,8 @@ import {pmMarkRead, pmSend, pmSendReceiveList, updateUnreadCount} from "../wrapp
 import {
     Avatar,
     Button,
-    ButtonGroup,
-    Container,
+    ButtonGroup, Collapse,
+    Container, Hidden,
     List,
     ListItem,
     ListItemText,
@@ -73,11 +73,14 @@ const useStyles = makeStyles(theme => createStyles({
     chatBox: {
         boxSizing: "border-box",
         position: "relative",
-        height: "calc(100vh - 200px)",
+        height: "calc(100vh - 244px)",
     },
     selected: {
         backgroundColor: "#eee",
-    }
+    },
+    marginBottom1: {
+        marginBottom: theme.spacing(1),
+    },
 }))
 
 type MessageSelector =
@@ -188,7 +191,7 @@ const useChatLineStyles = makeStyles(theme => createStyles({
         lineBreak: "anywhere",
         padding: theme.spacing(1),
         margin: theme.spacing(1),
-    }
+    },
 }));
 
 function RenderStringWithLn(props: {
@@ -236,6 +239,7 @@ export function PMListPage(props: RouteComponentProps<any, any, {
     const [chatMessage, setChatMessage] = React.useState("");
     const [loading, setLoading] = React.useState(false);
     const divRef = React.useRef<HTMLDivElement>();
+    const [sessionListOpen, setSessionListOpen] = React.useState(false);
 
     const canReply = !(currentSession === null || currentSession.fromServer);
     let withUserInfo = props.location?.state?.userInfo;
@@ -303,78 +307,94 @@ export function PMListPage(props: RouteComponentProps<any, any, {
         })
     }
 
-    return <Container>
-
-        <Grid container className={classes.chatBox} spacing={1}>
-            <Grid xs={4} item>
-                <Paper className={clsx(classes.chatBox, classes.paper)}>
-                    <List>
-                        {
-                            sessionList.map((session, index) =>
-                                <ListItem button onClick={() => {
-                                    setCurrentSession(session);
-                                    setChatMessage("");
-                                }} key={index} className={clsx(currentSession === session && classes.selected)}>
-                                    <ListItemText
-                                        primary={<span style={{display: "flex", justifyContent: "space-between"}}>
+    const SessionList = (<Paper className={clsx(classes.chatBox, classes.paper)} onClick={() => setSessionListOpen(false)}>
+        <List>
+            {
+                sessionList.map((session, index) =>
+                    <ListItem button onClick={() => {
+                        setCurrentSession(session);
+                        setChatMessage("");
+                    }} key={index} className={clsx(currentSession === session && classes.selected)}>
+                        <ListItemText
+                            primary={<span style={{display: "flex", justifyContent: "space-between"}}>
                                         <span>{(session.fromServer ? "系统消息" : session.userInfo.name)}</span>
                                         <span
                                             style={{color: "#777"}}>{session.unreadCount === 0 ? "" : `(${session.unreadCount})`}</span></span>}
-                                        secondary={<Typography variant="body2" color="textSecondary" style={{
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis",
-                                            whiteSpace: "nowrap",
-                                            fontSize: "0.875em",
-                                        }}>{session.messages.length > 0 ?
-                                            session.messages[session.messages.length - 1].message.message : "暂无消息"}</Typography>}/>
-                                </ListItem>
-                            )
-                        }
-                    </List>
-                </Paper>
-            </Grid>
-            <Grid xs={8} item>
-                <Paper className={clsx(classes.chatBox, classes.paper)}>
-                    <Typography className={classes.chatHeaderArea} variant="h6" component="div">
-                        {currentSession ? (currentSession.fromServer ? "系统消息" : currentSession.userInfo.name) : ""}
-                    </Typography>
-                    <List className={classes.chatHistoryArea}>
-                        {
-                            currentSession ? currentSession.messages.map((message, index) =>
-                                    <ChatLine message={message} key={index} userName={userInfo?.name || ""}/>) :
-                                <div style={{textAlign: "center"}}>请选择一个会话</div>
-                        }
-                        <div style={{height: "0"}} ref={ref => {
-                            if (ref) divRef.current = ref;
-                        }}/>
-                    </List>
-                    <div className={classes.chatBoxArea}>
-                        <TextField fullWidth
-                                   multiline
-                                   value={chatMessage}
-                                   disabled={!canReply}
-                                   placeholder={"回复"}
-                                   inputProps={{
-                                       style: {
-                                           height: textFieldHeight,
-                                           padding: '8px 14px',
-                                           boxSizing: "border-box",
-                                       },
-                                   }}
-                                   onChange={(event) => {
-                                       setChatMessage(event.target.value);
-                                   }}
-                        />
-                        <ButtonGroup>
-                            <Button disabled={!canReply} variant={"outlined"}
-                                    color={canReply ? "primary" : "default"}
-                                    onClick={!currentSession?.fromServer && currentSession?.userInfo ? () => sendMessage(currentSession.userInfo) : undefined}>
-                                发送
-                            </Button>
-                        </ButtonGroup>
-                    </div>
-                </Paper>
-            </Grid>
+                            secondary={<Typography variant="body2" color="textSecondary" style={{
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                // whiteSpace: "nowrap",
+                                fontSize: "0.875em",
+                                height: "1.43em",
+                            }}>{session.messages.length > 0 ?
+                                session.messages[session.messages.length - 1].message.message : "暂无消息"}</Typography>}/>
+                    </ListItem>
+                )
+            }
+        </List>
+    </Paper>);
+
+    const ChatArea = (<Grid xs={12} md={8} item>
+        <Paper className={clsx(classes.chatBox, classes.paper)}>
+            <Typography className={classes.chatHeaderArea} variant="h6" component="div">
+                {currentSession ? (currentSession.fromServer ? "系统消息" : currentSession.userInfo.name) : ""}
+            </Typography>
+            <List className={classes.chatHistoryArea}>
+                {
+                    currentSession ? currentSession.messages.map((message, index) =>
+                            <ChatLine message={message} key={index} userName={userInfo?.name || ""}/>) :
+                        <div style={{textAlign: "center"}}>请选择一个会话</div>
+                }
+                <div style={{height: "0"}} ref={ref => {
+                    if (ref) divRef.current = ref;
+                }}/>
+            </List>
+            <div className={classes.chatBoxArea}>
+                <TextField fullWidth
+                           multiline
+                           value={chatMessage}
+                           disabled={!canReply}
+                           placeholder={"回复"}
+                           inputProps={{
+                               style: {
+                                   height: textFieldHeight,
+                                   padding: '8px 14px',
+                                   boxSizing: "border-box",
+                               },
+                           }}
+                           onChange={(event) => {
+                               setChatMessage(event.target.value);
+                           }}
+                />
+                <ButtonGroup>
+                    <Button disabled={!canReply} variant={"outlined"}
+                            color={canReply ? "primary" : "default"}
+                            onClick={!currentSession?.fromServer && currentSession?.userInfo ? () => sendMessage(currentSession.userInfo) : undefined}>
+                        发送
+                    </Button>
+                </ButtonGroup>
+            </div>
+        </Paper>
+    </Grid>);
+
+    return <Container>
+        <Grid container spacing={1}>
+            <Hidden smDown>
+                <Grid xs={12} md={4} item>
+                    {SessionList}
+                </Grid>
+            </Hidden>
+            <Hidden mdUp>
+                <Grid xs={12} md={4} item>
+                    <Paper component="div" className={classes.marginBottom1}>
+                        <Button fullWidth onClick={() => setSessionListOpen(!sessionListOpen)}>展开/收起会话列表</Button>
+                    </Paper>
+                    <Collapse in={sessionListOpen}>
+                        {SessionList}
+                    </Collapse>
+                </Grid>
+            </Hidden>
+            {ChatArea}
         </Grid>
     </Container>
 }
